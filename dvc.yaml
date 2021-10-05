@@ -5,3 +5,27 @@ stages:
       - data/sample_submission.csv
       - data/test.csv
       - data/train.csv
+  prepare_data:
+    cmd: python src/prepare.py
+    deps:
+      - data/train.csv
+    outs:
+      - data/prepared/train.csv
+      - data/prepared/validate.csv
+      - data/prepared/test.csv
+  train:
+    cmd: python src/train.py
+    deps:
+      - data/prepared/train.csv
+      - data/prepared/validate.csv
+      - data/prepared/test.csv
+    outs:
+      - models/simple_model.pickle
+    metrics:
+      - models/train_metrics.json
+  test:
+    cmd: python src/test.py
+    deps:
+      - models/simple_model.pickle
+    metrics:
+      - models/test_metrics.json

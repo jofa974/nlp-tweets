@@ -12,3 +12,48 @@ stages:
     - path: data/train.csv
       md5: f147942c91d00d754503775341d13682
       size: 987712
+  prepare_data:
+    cmd: python src/prepare.py
+    deps:
+    - path: data/train.csv
+      md5: f147942c91d00d754503775341d13682
+      size: 987712
+    outs:
+    - path: data/prepared/test.csv
+      md5: d41d8cd98f00b204e9800998ecf8427e
+      size: 0
+    - path: data/prepared/train.csv
+      md5: d41d8cd98f00b204e9800998ecf8427e
+      size: 0
+    - path: data/prepared/validate.csv
+      md5: d41d8cd98f00b204e9800998ecf8427e
+      size: 0
+  train:
+    cmd: python src/train.py
+    deps:
+    - path: data/prepared/test.csv
+      md5: d41d8cd98f00b204e9800998ecf8427e
+      size: 0
+    - path: data/prepared/train.csv
+      md5: d41d8cd98f00b204e9800998ecf8427e
+      size: 0
+    - path: data/prepared/validate.csv
+      md5: d41d8cd98f00b204e9800998ecf8427e
+      size: 0
+    outs:
+    - path: models/simple_model.pickle
+      md5: d41d8cd98f00b204e9800998ecf8427e
+      size: 0
+    - path: models/train_metrics.json
+      md5: 99914b932bd37a50b983c5e7c90ae93b
+      size: 2
+  test:
+    cmd: python src/test.py
+    deps:
+    - path: models/simple_model.pickle
+      md5: d41d8cd98f00b204e9800998ecf8427e
+      size: 0
+    outs:
+    - path: models/test_metrics.json
+      md5: 99914b932bd37a50b983c5e7c90ae93b
+      size: 2
