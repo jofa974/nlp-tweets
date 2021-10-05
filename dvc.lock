@@ -57,3 +57,13 @@ stages:
     - path: models/test_metrics.json
       md5: 99914b932bd37a50b983c5e7c90ae93b
       size: 2
+  predict:
+    cmd: python src/predict.py
+    deps:
+    - path: models/simple_model.pickle
+      md5: d41d8cd98f00b204e9800998ecf8427e
+      size: 0
+    outs:
+    - path: data/predictions/simple_model_prediction.csv
+      md5: d41d8cd98f00b204e9800998ecf8427e
+      size: 0

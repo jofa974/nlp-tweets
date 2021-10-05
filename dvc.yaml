@@ -29,3 +29,9 @@ stages:
       - models/simple_model.pickle
     metrics:
       - models/test_metrics.json
+  predict:
+    cmd: python src/predict.py
+    deps:
+      - models/simple_model.pickle
+    outs:
+      - data/predictions/simple_model_prediction.csv
