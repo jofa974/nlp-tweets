@@ -1,3 +1,7 @@
 dvc
 scikit-learn
 kaggle
+black
+pytest
+pytest-xdist
+PyYAML

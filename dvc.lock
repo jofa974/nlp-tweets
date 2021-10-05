@@ -1,0 +1,14 @@
+schema: '2.0'
+stages:
+  fetch_data:
+    cmd: ./src/fetch_data.sh
+    outs:
+    - path: data/sample_submission.csv
+      md5: e07af9cfb75c09d368437c2c1c7900e9
+      size: 22746
+    - path: data/test.csv
+      md5: ff248529f207ea164d73636e5b1b251d
+      size: 420783
+    - path: data/train.csv
+      md5: f147942c91d00d754503775341d13682
+      size: 987712
