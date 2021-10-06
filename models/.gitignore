@@ -1,3 +1,4 @@
 /test_metrics.json
 /simple_model.pickle
 /train_metrics.json
+/simple_model.joblib

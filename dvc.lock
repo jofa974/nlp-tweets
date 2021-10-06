@@ -44,21 +44,21 @@ stages:
       md5: 4250c6f4d52eb911486cd675f284dac6
       size: 384339900
     - path: src/train.py
-      md5: 81b5639ae2653d1b931bead7cc698a01
-      size: 271
+      md5: 3a38e0a7fa66290545c6cc85c8d2174d
+      size: 772
     outs:
-    - path: models/simple_model.pickle
-      md5: d41d8cd98f00b204e9800998ecf8427e
-      size: 0
+    - path: models/simple_model.joblib
+      md5: 6bf0c10f878f776b624c0c63f7328550
+      size: 101715
     - path: models/train_metrics.json
-      md5: 99914b932bd37a50b983c5e7c90ae93b
-      size: 2
+      md5: 99bd22a94711719503193f7a08b4f4b5
+      size: 32
   test:
     cmd: python src/test.py
     deps:
-    - path: models/simple_model.pickle
-      md5: d41d8cd98f00b204e9800998ecf8427e
-      size: 0
+    - path: models/simple_model.joblib
+      md5: 6bf0c10f878f776b624c0c63f7328550
+      size: 101715
     - path: src/test.py
       md5: f14ec5f96ce096fb6046da52b3e1925a
       size: 191
@@ -69,9 +69,9 @@ stages:
   predict:
     cmd: python src/predict.py
     deps:
-    - path: models/simple_model.pickle
-      md5: d41d8cd98f00b204e9800998ecf8427e
-      size: 0
+    - path: models/simple_model.joblib
+      md5: 6bf0c10f878f776b624c0c63f7328550
+      size: 101715
     - path: src/predict.py
       md5: 52d0e19a9a4308952be25781268789d7
       size: 297

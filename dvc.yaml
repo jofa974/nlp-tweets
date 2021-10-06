@@ -24,7 +24,7 @@ stages:
       - data/prepared/test.csv
       - src/train.py
     outs:
-      - models/simple_model.pickle
+      - models/simple_model.joblib
     metrics:
       - models/train_metrics.json:
           cache: false
@@ -32,7 +32,7 @@ stages:
   test:
     cmd: python src/test.py
     deps:
-      - models/simple_model.pickle
+      - models/simple_model.joblib
       - src/test.py
     metrics:
       - models/test_metrics.json:
@@ -40,7 +40,7 @@ stages:
   predict:
     cmd: python src/predict.py
     deps:
-      - models/simple_model.pickle
+      - models/simple_model.joblib
       - src/predict.py
     outs:
       - data/predictions/simple_model_prediction.csv
