@@ -5,33 +5,42 @@ stages:
       - data/sample_submission.csv
       - data/test.csv
       - data/train.csv
+
   prepare_data:
     cmd: python src/prepare.py
     deps:
       - data/train.csv
+      - src/prepare.py
     outs:
       - data/prepared/train.csv
       - data/prepared/validate.csv
       - data/prepared/test.csv
+
   train:
     cmd: python src/train.py
     deps:
       - data/prepared/train.csv
       - data/prepared/validate.csv
       - data/prepared/test.csv
+      - src/train.py
     outs:
       - models/simple_model.pickle
     metrics:
-      - models/train_metrics.json
+      - models/train_metrics.json:
+          cache: false
+
   test:
     cmd: python src/test.py
     deps:
       - models/simple_model.pickle
+      - src/test.py
     metrics:
-      - models/test_metrics.json
+      - models/test_metrics.json:
+          cache: false
   predict:
     cmd: python src/predict.py
     deps:
       - models/simple_model.pickle
+      - src/predict.py
     outs:
       - data/predictions/simple_model_prediction.csv

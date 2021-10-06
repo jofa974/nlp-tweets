@@ -1,7 +1,12 @@
 dvc
+dvclive
 scikit-learn
 kaggle
 black
 pytest
 pytest-xdist
 PyYAML
+ipykernel
+pandas
+nbformat
+plotly

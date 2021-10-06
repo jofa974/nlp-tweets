@@ -18,28 +18,34 @@ stages:
     - path: data/train.csv
       md5: f147942c91d00d754503775341d13682
       size: 987712
+    - path: src/prepare.py
+      md5: 5101923c8f856c98a7b87fea1c670d01
+      size: 1785
     outs:
     - path: data/prepared/test.csv
-      md5: d41d8cd98f00b204e9800998ecf8427e
-      size: 0
+      md5: 8e7d0228252794852e6fd48d57ca624e
+      size: 480582650
     - path: data/prepared/train.csv
-      md5: d41d8cd98f00b204e9800998ecf8427e
-      size: 0
+      md5: f6fcaa30301856fce8f710db9db8ec2a
+      size: 1537359600
     - path: data/prepared/validate.csv
-      md5: d41d8cd98f00b204e9800998ecf8427e
-      size: 0
+      md5: 4250c6f4d52eb911486cd675f284dac6
+      size: 384339900
   train:
     cmd: python src/train.py
     deps:
     - path: data/prepared/test.csv
-      md5: d41d8cd98f00b204e9800998ecf8427e
-      size: 0
+      md5: 8e7d0228252794852e6fd48d57ca624e
+      size: 480582650
     - path: data/prepared/train.csv
-      md5: d41d8cd98f00b204e9800998ecf8427e
-      size: 0
+      md5: f6fcaa30301856fce8f710db9db8ec2a
+      size: 1537359600
     - path: data/prepared/validate.csv
-      md5: d41d8cd98f00b204e9800998ecf8427e
-      size: 0
+      md5: 4250c6f4d52eb911486cd675f284dac6
+      size: 384339900
+    - path: src/train.py
+      md5: 81b5639ae2653d1b931bead7cc698a01
+      size: 271
     outs:
     - path: models/simple_model.pickle
       md5: d41d8cd98f00b204e9800998ecf8427e
@@ -53,6 +59,9 @@ stages:
     - path: models/simple_model.pickle
       md5: d41d8cd98f00b204e9800998ecf8427e
       size: 0
+    - path: src/test.py
+      md5: f14ec5f96ce096fb6046da52b3e1925a
+      size: 191
     outs:
     - path: models/test_metrics.json
       md5: 99914b932bd37a50b983c5e7c90ae93b
@@ -63,6 +72,9 @@ stages:
     - path: models/simple_model.pickle
       md5: d41d8cd98f00b204e9800998ecf8427e
       size: 0
+    - path: src/predict.py
+      md5: 52d0e19a9a4308952be25781268789d7
+      size: 297
     outs:
     - path: data/predictions/simple_model_prediction.csv
       md5: d41d8cd98f00b204e9800998ecf8427e
