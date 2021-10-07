@@ -48,7 +48,7 @@ stages:
       size: 772
     outs:
     - path: models/simple_model.joblib
-      md5: 6bf0c10f878f776b624c0c63f7328550
+      md5: 9c04b1bafacc5122b187bdd3ecdb99cc
       size: 101715
     - path: models/train_metrics.json
       md5: 99bd22a94711719503193f7a08b4f4b5
@@ -57,20 +57,20 @@ stages:
     cmd: python src/test.py
     deps:
     - path: models/simple_model.joblib
-      md5: 6bf0c10f878f776b624c0c63f7328550
+      md5: 9c04b1bafacc5122b187bdd3ecdb99cc
       size: 101715
     - path: src/test.py
-      md5: f14ec5f96ce096fb6046da52b3e1925a
-      size: 191
+      md5: e9ffd30e30d7bb65109d7c574395c8b6
+      size: 656
     outs:
     - path: models/test_metrics.json
-      md5: 99914b932bd37a50b983c5e7c90ae93b
-      size: 2
+      md5: 69e69a752c510c4a1f90e92328986c6a
+      size: 32
   predict:
     cmd: python src/predict.py
     deps:
     - path: models/simple_model.joblib
-      md5: 6bf0c10f878f776b624c0c63f7328550
+      md5: 9c04b1bafacc5122b187bdd3ecdb99cc
       size: 101715
     - path: src/predict.py
       md5: 52d0e19a9a4308952be25781268789d7
