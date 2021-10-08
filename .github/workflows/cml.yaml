@@ -13,9 +13,11 @@ jobs:
         run: |
           # Install requirements
           pip install -r requirements.txt
+          
           # Pull data & run-cache from gdrive and reproduce pipeline
-          #dvc pull data --run-cache
+          dvc pull data --run-cache
           dvc repro
+          
           # Report metrics
           echo "## Metrics" >> report.md
           git fetch --prune
