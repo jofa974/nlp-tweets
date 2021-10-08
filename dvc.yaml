@@ -1,15 +1,8 @@
 stages:
-  fetch_data:
-    cmd: ./src/fetch_data.sh
-    outs:
-      - data/sample_submission.csv
-      - data/test.csv
-      - data/train.csv
-
   prepare_data:
     cmd: python src/prepare.py
     deps:
-      - data/train.csv
+      - data/raw/train.csv
       - src/prepare.py
     outs:
       - data/prepared/texts.json
@@ -40,6 +33,7 @@ stages:
   predict:
     cmd: python src/predict.py
     deps:
+      - data/raw/test.csv
       - models/simple_model.joblib
       - src/predict.py
     outs:

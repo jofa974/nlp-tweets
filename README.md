@@ -17,7 +17,8 @@ This repo is used to practice the developement of ML models for NLP and building
 
 The data preprocessing will constitute an important part of the development. The following approaches will be successively implemented:
 
-- Manual embedding
+- CountVectorizer from sklearn
+- Word2Vec
 - Spacy embedding
 
 ### Model

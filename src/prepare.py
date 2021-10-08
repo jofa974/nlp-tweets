@@ -30,7 +30,7 @@ def cleanup(text):
 
 def prepare():
 
-    df = pd.read_csv("data/train.csv")
+    df = pd.read_csv("data/raw/train.csv")
 
     df["text_clean"] = df["text"].apply(cleanup)
 
