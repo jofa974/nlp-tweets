@@ -15,12 +15,12 @@ stages:
   prepare_data:
     cmd: python src/prepare.py
     deps:
-    - path: data/train.csv
+    - path: data/raw/train.csv
       md5: f147942c91d00d754503775341d13682
       size: 987712
     - path: src/prepare.py
-      md5: d985bd2669f934f834ede6c1ad152e54
-      size: 1727
+      md5: 97d74b18db4023f481ee02a35f9bc2cd
+      size: 1731
     outs:
     - path: data/prepared/labels.json
       md5: 9b82a809810ad0411147c95d06a5c946
@@ -29,7 +29,7 @@ stages:
       md5: 3db9c8304cd0e9702a9b83add0d9a19d
       size: 707410
     - path: data/prepared/vectorizer.joblib
-      md5: 0963611bb71f0bd290ce7c29886835ba
+      md5: 3952e5f67ef4d9eb942312ab44fc6cf4
       size: 165905
   train:
     cmd: python src/train.py
@@ -41,7 +41,7 @@ stages:
       md5: 3db9c8304cd0e9702a9b83add0d9a19d
       size: 707410
     - path: data/prepared/vectorizer.joblib
-      md5: 0963611bb71f0bd290ce7c29886835ba
+      md5: 3952e5f67ef4d9eb942312ab44fc6cf4
       size: 165905
     - path: src/train.py
       md5: 6224dc278edfa566c856a3f6256a8e14
@@ -69,6 +69,9 @@ stages:
   predict:
     cmd: python src/predict.py
     deps:
+    - path: data/raw/test.csv
+      md5: ff248529f207ea164d73636e5b1b251d
+      size: 420783
     - path: models/simple_model.joblib
       md5: 5a85a7777f7c754dcc94a021ef134779
       size: 101749
