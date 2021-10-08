@@ -4,13 +4,20 @@ import joblib
 import numpy as np
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import f1_score
+from pathlib import Path
 
 
 def train():
 
-    train = np.loadtxt("data/prepared/train.csv", delimiter=",")
-    X_train = train[:, :-1]
-    Y_train = train[:, -1]
+    out_path = Path("data/prepared")
+    with open(out_path / "texts.json", "r") as f:
+        X_train = json.load(f)["train"]
+
+    with open(out_path / "labels.json", "r") as f:
+        Y_train = json.load(f)["train"]
+
+    vectorizer = joblib.load(out_path / "vectorizer.joblib")
+    X_train = vectorizer.transform(X_train).toarray()
 
     model = LogisticRegression()
     model.fit(X_train, Y_train)

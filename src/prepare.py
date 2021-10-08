@@ -1,6 +1,8 @@
+import json
 import re
 from pathlib import Path
 
+import joblib
 import numpy as np
 import pandas as pd
 from sklearn.feature_extraction.text import CountVectorizer
@@ -40,25 +42,22 @@ def prepare():
     )
 
     vectorizer = CountVectorizer(stop_words="english")
-    X_train = vectorizer.fit_transform(X_train).toarray()
-    X_val = vectorizer.transform(X_val).toarray()
-    X_test = vectorizer.transform(X_test).toarray()
+    vectorizer.fit(X_train)
 
     out_path = Path("data/prepared")
     out_path.mkdir(parents=True, exist_ok=True)
 
-    log.info("Saving train data...")
-    np.savetxt(
-        out_path / "train.csv", np.column_stack([X_train, Y_train]), delimiter=","
-    )
+    joblib.dump(vectorizer, out_path / "vectorizer.joblib")
 
-    log.info("Saving validation data...")
-    np.savetxt(
-        out_path / "validate.csv", np.column_stack([X_val, Y_val]), delimiter=","
-    )
+    log.info("Saving texts...")
+    texts = {"train": X_train.tolist(), "val": X_val.tolist(), "test": X_test.tolist()}
+    with open(out_path / "texts.json", "w") as f:
+        json.dump(texts, f)
 
-    log.info("Saving test data...")
-    np.savetxt(out_path / "test.csv", np.column_stack([X_test, Y_test]), delimiter=",")
+    log.info("Saving labels...")
+    labels = {"train": Y_train.tolist(), "val": Y_val.tolist(), "test": Y_test.tolist()}
+    with open(out_path / "labels.json", "w") as f:
+        json.dump(labels, f)
 
     log.info("Done.")
 

@@ -12,16 +12,16 @@ stages:
       - data/train.csv
       - src/prepare.py
     outs:
-      - data/prepared/train.csv
-      - data/prepared/validate.csv
-      - data/prepared/test.csv
+      - data/prepared/texts.json
+      - data/prepared/labels.json
+      - data/prepared/vectorizer.joblib
 
   train:
     cmd: python src/train.py
     deps:
-      - data/prepared/train.csv
-      - data/prepared/validate.csv
-      - data/prepared/test.csv
+      - data/prepared/texts.json
+      - data/prepared/labels.json
+      - data/prepared/vectorizer.joblib
       - src/train.py
     outs:
       - models/simple_model.joblib
