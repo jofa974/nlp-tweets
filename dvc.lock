@@ -19,37 +19,37 @@ stages:
       md5: f147942c91d00d754503775341d13682
       size: 987712
     - path: src/prepare.py
-      md5: 5101923c8f856c98a7b87fea1c670d01
-      size: 1785
+      md5: d985bd2669f934f834ede6c1ad152e54
+      size: 1727
     outs:
-    - path: data/prepared/test.csv
-      md5: 8e7d0228252794852e6fd48d57ca624e
-      size: 480582650
-    - path: data/prepared/train.csv
-      md5: f6fcaa30301856fce8f710db9db8ec2a
-      size: 1537359600
-    - path: data/prepared/validate.csv
-      md5: 4250c6f4d52eb911486cd675f284dac6
-      size: 384339900
+    - path: data/prepared/labels.json
+      md5: 9b82a809810ad0411147c95d06a5c946
+      size: 22869
+    - path: data/prepared/texts.json
+      md5: 3db9c8304cd0e9702a9b83add0d9a19d
+      size: 707410
+    - path: data/prepared/vectorizer.joblib
+      md5: 0963611bb71f0bd290ce7c29886835ba
+      size: 165905
   train:
     cmd: python src/train.py
     deps:
-    - path: data/prepared/test.csv
-      md5: 8e7d0228252794852e6fd48d57ca624e
-      size: 480582650
-    - path: data/prepared/train.csv
-      md5: f6fcaa30301856fce8f710db9db8ec2a
-      size: 1537359600
-    - path: data/prepared/validate.csv
-      md5: 4250c6f4d52eb911486cd675f284dac6
-      size: 384339900
+    - path: data/prepared/labels.json
+      md5: 9b82a809810ad0411147c95d06a5c946
+      size: 22869
+    - path: data/prepared/texts.json
+      md5: 3db9c8304cd0e9702a9b83add0d9a19d
+      size: 707410
+    - path: data/prepared/vectorizer.joblib
+      md5: 0963611bb71f0bd290ce7c29886835ba
+      size: 165905
     - path: src/train.py
-      md5: 3a38e0a7fa66290545c6cc85c8d2174d
-      size: 772
+      md5: 6224dc278edfa566c856a3f6256a8e14
+      size: 1012
     outs:
     - path: models/simple_model.joblib
-      md5: 9c04b1bafacc5122b187bdd3ecdb99cc
-      size: 101715
+      md5: 5a85a7777f7c754dcc94a021ef134779
+      size: 101749
     - path: models/train_metrics.json
       md5: 99bd22a94711719503193f7a08b4f4b5
       size: 32
@@ -57,11 +57,11 @@ stages:
     cmd: python src/test.py
     deps:
     - path: models/simple_model.joblib
-      md5: 9c04b1bafacc5122b187bdd3ecdb99cc
-      size: 101715
+      md5: 5a85a7777f7c754dcc94a021ef134779
+      size: 101749
     - path: src/test.py
-      md5: e9ffd30e30d7bb65109d7c574395c8b6
-      size: 656
+      md5: f8971bfb32c065cb0d94656b91f5f4a9
+      size: 882
     outs:
     - path: models/test_metrics.json
       md5: 69e69a752c510c4a1f90e92328986c6a
@@ -70,8 +70,8 @@ stages:
     cmd: python src/predict.py
     deps:
     - path: models/simple_model.joblib
-      md5: 9c04b1bafacc5122b187bdd3ecdb99cc
-      size: 101715
+      md5: 5a85a7777f7c754dcc94a021ef134779
+      size: 101749
     - path: src/predict.py
       md5: 52d0e19a9a4308952be25781268789d7
       size: 297
