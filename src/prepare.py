@@ -5,8 +5,11 @@ from pathlib import Path
 import joblib
 import numpy as np
 import pandas as pd
+import spacy
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.model_selection import train_test_split
+from spacy.lang.en.stop_words import STOP_WORDS
+from tqdm import tqdm
 
 
 def cleanup(text):
@@ -28,11 +31,24 @@ def cleanup(text):
     return re.sub(r"https?://\S+", "", text)
 
 
+def lemmatize_text(nlp, text):
+    text = "".join(ch for ch in text if ch.isalnum() or ch == " ")
+    text = nlp(text)
+    lemma = " ".join([token.lemma_ for token in text if token.text not in STOP_WORDS])
+    return lemma
+
+
 def prepare():
 
-    df = pd.read_csv("data/raw/train.csv")
+    log.info("I am preparing the data !")
 
-    df["text_clean"] = df["text"].apply(cleanup)
+    tqdm.pandas()
+
+    df = pd.read_csv("data/raw/train.csv")
+    df["text_clean"] = df["text"].progress_apply(cleanup)
+
+    nlp = spacy.load("en_core_web_sm")
+    df["text_clean"] = df["text_clean"].progress_apply(lambda x: lemmatize_text(nlp, x))
 
     X_train, X_test, Y_train, Y_test = train_test_split(
         df["text_clean"].values, df["target"].values, test_size=0.2, random_state=42
@@ -41,6 +57,7 @@ def prepare():
         X_train, Y_train, test_size=0.2, random_state=42
     )
 
+    log.info("Vectorizing...")
     vectorizer = CountVectorizer(stop_words="english")
     vectorizer.fit(X_train)
 
@@ -67,5 +84,4 @@ if __name__ == "__main__":
 
     log = setup_applevel_logger(file_name="app_debug.log")
 
-    log.info("I am preparing the data !")
     prepare()
