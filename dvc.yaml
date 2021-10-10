@@ -10,31 +10,38 @@ stages:
       - data/prepared/vectorizer.joblib
 
   train:
-    cmd: python src/train.py
-    deps:
-      - data/prepared/texts.json
-      - data/prepared/labels.json
-      - data/prepared/vectorizer.joblib
-      - src/train.py
-    outs:
-      - models/simple_model.joblib
-    metrics:
-      - models/train_metrics.json:
-          cache: false
+    foreach: ${models}
+    do:
+      cmd: python src/train.py --model-name=${item.name}
+      deps:
+        - data/prepared/texts.json
+        - data/prepared/labels.json
+        - data/prepared/vectorizer.joblib
+        - src/train.py
+      outs:
+        - models/${item.name}.joblib
+      metrics:
+        - models/${item.name}_train_metrics.json:
+            cache: false
 
   test:
-    cmd: python src/test.py
-    deps:
-      - models/simple_model.joblib
-      - src/test.py
-    metrics:
-      - models/test_metrics.json:
-          cache: false
+    foreach: ${models}
+    do:
+      cmd: python src/test.py
+      deps:
+        - models/${item.name}.joblib
+        - src/test.py
+      metrics:
+        - models/${item.name}_test_metrics.json:
+            cache: false
+
   predict:
-    cmd: python src/predict.py
-    deps:
-      - data/raw/test.csv
-      - models/simple_model.joblib
-      - src/predict.py
-    outs:
-      - data/predictions/simple_model_prediction.csv
+    foreach: ${models}
+    do:
+      cmd: python src/predict.py
+      deps:
+        - data/raw/test.csv
+        - models/${item.name}.joblib
+        - src/predict.py
+      outs:
+        - data/predictions/${item.name}_prediction.csv

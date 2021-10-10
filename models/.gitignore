@@ -1,4 +1,5 @@
 /test_metrics.json
-/simple_model.pickle
+/${item.name}.pickle
 /train_metrics.json
-/simple_model.joblib
+/${item.name}.joblib
+/LogisticRegression.joblib
