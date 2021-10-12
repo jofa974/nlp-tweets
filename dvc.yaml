@@ -1,3 +1,0 @@
-stages:
-  run:
-    cmd: dvc repro data/dvc.yaml && dvc repro models/dvc.yaml

@@ -1,124 +1,116 @@
 schema: '2.0'
 stages:
   train@1:
-    cmd: python src/train.py --model-name="tf_conv1d" --preprocessor=TFTokenizer
+    cmd: python src/train.py --model-class=TFConv1D --preprocessor=TFTokenizer
     deps:
     - path: data/prepared/TFTokenizer/labels.json
       md5: 9b82a809810ad0411147c95d06a5c946
       size: 22869
     - path: data/prepared/TFTokenizer/preproc.joblib
-      md5: ce7fa6cf63cf8d02d99b15b5471a0ac8
+      md5: 0abbcc3a2583390ab6f363d233c788a7
       size: 667924
     - path: data/prepared/TFTokenizer/texts.json
       md5: 158c1657f6d3f1c0bcc3e69e1b815818
       size: 523215
-    - path: models/tf_conv1d/model.py
+    - path: models/TFConv1D/model.py
       md5: 41389fad42b57ba2c32816b9bff34768
       size: 24
     - path: src/train.py
-      md5: 499aa138294b1aa98e72f3bd9ea4de94
-      size: 1965
+      md5: 077c90b98302a9ab19d51007945c69bd
+      size: 1838
     outs:
-    - path: models/tf_conv1d/model.h5
-      md5: 16d65535105522c1b904a95fe55d8c21
+    - path: models/TFConv1D/model.h5
+      md5: f3544438f0e8dd317c39ab53e211811c
       size: 106744464
-    - path: models/tf_conv1d_train_metrics.json
+    - path: models/TFConv1D/train_metrics.json
       md5: 8339555778c7fe1766637b98978ec1dd
       size: 32
   test@1:
-    cmd: python src/test.py --model-name="tf_conv1d" --preprocessor=TFTokenizer
+    cmd: python src/test.py --model-class=TFConv1D --preprocessor=TFTokenizer
     deps:
-    - path: models/tf_conv1d/model.h5
-      md5: 16d65535105522c1b904a95fe55d8c21
+    - path: models/TFConv1D/model.h5
+      md5: f3544438f0e8dd317c39ab53e211811c
       size: 106744464
     - path: src/test.py
-      md5: 47c85f779a89ff1e34145ee5d4a3c767
-      size: 1716
+      md5: b3027cde603457c36db20075eab3d34d
+      size: 1561
     outs:
-    - path: models/tf_conv1d_test_metrics.json
+    - path: models/TFConv1D/test_metrics.json
       md5: c2416183742e2f7f9354acbfb29aaa4d
       size: 32
   predict@1:
-    cmd: python src/predict.py --model-name="tf_conv1d"
+    cmd: python src/predict.py --model-class=TFConv1D
     deps:
     - path: data/raw/test.csv
       md5: ff248529f207ea164d73636e5b1b251d
       size: 420783
-    - path: models/tf_conv1d
-      md5: b036018678c0edfda991400259acc0ea.dir
-      size: 213621858
-      nfiles: 7
-    - path: models/tf_conv1d/model.h5
-      md5: 16d65535105522c1b904a95fe55d8c21
+    - path: models/TFConv1D/model.h5
+      md5: f3544438f0e8dd317c39ab53e211811c
       size: 106744464
-    - path: models/tf_conv1d_test_metrics.json
+    - path: models/TFConv1D/test_metrics.json
       md5: c2416183742e2f7f9354acbfb29aaa4d
       size: 32
     - path: src/predict.py
-      md5: 419b71030d2fe178c9394628a7f5ba3e
-      size: 611
+      md5: dcd79102586cf025166345b58fe5e825
+      size: 605
     outs:
-    - path: data/predictions/tf_conv1d_prediction.csv
+    - path: data/predictions/TFConv1D_prediction.csv
       md5: d41d8cd98f00b204e9800998ecf8427e
       size: 0
   train@0:
-    cmd: python src/train.py --model-name="logistic_regression" --preprocessor=SKCountVectorizer
+    cmd: python src/train.py --model-class=SKLogisticRegression --preprocessor=SKCountVectorizer
     deps:
     - path: data/prepared/SKCountVectorizer/labels.json
       md5: 9b82a809810ad0411147c95d06a5c946
       size: 22869
     - path: data/prepared/SKCountVectorizer/preproc.joblib
-      md5: faf800d6cfde453da68c96b529af3c01
+      md5: 9db0cdb0d67e5856d15b7c3154e54143
       size: 222716
     - path: data/prepared/SKCountVectorizer/texts.json
       md5: 158c1657f6d3f1c0bcc3e69e1b815818
       size: 523215
-    - path: models/logistic_regression/model.py
+    - path: models/SKLogisticRegression/model.py
       md5: 41389fad42b57ba2c32816b9bff34768
       size: 24
     - path: src/train.py
-      md5: 499aa138294b1aa98e72f3bd9ea4de94
-      size: 1965
+      md5: 077c90b98302a9ab19d51007945c69bd
+      size: 1838
     outs:
-    - path: models/logistic_regression/model.joblib
+    - path: models/SKLogisticRegression/model.joblib
       md5: 1112172fd2e9b9f332fd3d7720a2c2d8
       size: 133075
-    - path: models/logistic_regression_train_metrics.json
+    - path: models/SKLogisticRegression/train_metrics.json
       md5: 4e6f8bfa366b18e95875ace31f754e1f
       size: 32
   test@0:
-    cmd: python src/test.py --model-name="logistic_regression" --preprocessor=SKCountVectorizer
+    cmd: python src/test.py --model-class=SKLogisticRegression --preprocessor=SKCountVectorizer
     deps:
-    - path: models/logistic_regression/model.joblib
+    - path: models/SKLogisticRegression/model.joblib
       md5: 1112172fd2e9b9f332fd3d7720a2c2d8
       size: 133075
     - path: src/test.py
-      md5: 47c85f779a89ff1e34145ee5d4a3c767
-      size: 1716
+      md5: b3027cde603457c36db20075eab3d34d
+      size: 1561
     outs:
-    - path: models/logistic_regression_test_metrics.json
+    - path: models/SKLogisticRegression/test_metrics.json
       md5: 7b699292dba529242bd5ea2a55fb8602
       size: 32
   predict@0:
-    cmd: python src/predict.py --model-name="logistic_regression"
+    cmd: python src/predict.py --model-class=SKLogisticRegression
     deps:
     - path: data/raw/test.csv
       md5: ff248529f207ea164d73636e5b1b251d
       size: 420783
-    - path: models/logistic_regression
-      md5: 55efb770e9c7819089924c5b773641d5.dir
-      size: 133099
-      nfiles: 2
-    - path: models/logistic_regression/model.joblib
+    - path: models/SKLogisticRegression/model.joblib
       md5: 1112172fd2e9b9f332fd3d7720a2c2d8
       size: 133075
-    - path: models/logistic_regression_test_metrics.json
+    - path: models/SKLogisticRegression/test_metrics.json
       md5: 7b699292dba529242bd5ea2a55fb8602
       size: 32
     - path: src/predict.py
-      md5: 419b71030d2fe178c9394628a7f5ba3e
-      size: 611
+      md5: dcd79102586cf025166345b58fe5e825
+      size: 605
     outs:
-    - path: data/predictions/logistic_regression_prediction.csv
+    - path: data/predictions/SKLogisticRegression_prediction.csv
       md5: d41d8cd98f00b204e9800998ecf8427e
       size: 0

@@ -2,58 +2,57 @@ stages:
   train:
     foreach:
       - preprocessor: SKCountVectorizer
-        model: logistic_regression
+        model_class: SKLogisticRegression
         output: model.joblib
       - preprocessor: TFTokenizer
-        model: tf_conv1d
+        model_class: TFConv1D
         output: model.h5
     do:
       wdir: ../
-      cmd: python src/train.py --model-name="${item.model}" --preprocessor=${item.preprocessor}
+      cmd: python src/train.py --model-class=${item.model_class} --preprocessor=${item.preprocessor}
       deps:
         - data/prepared/${item.preprocessor}/texts.json
         - data/prepared/${item.preprocessor}/labels.json
         - data/prepared/${item.preprocessor}/preproc.joblib
         - src/train.py
-        - models/${item.model}/model.py
+        - models/${item.model_class}/model.py
       outs:
-        - models/${item.model}/${item.output}
+        - models/${item.model_class}/${item.output}
       metrics:
-        - models/${item.model}_train_metrics.json:
+        - models/${item.model_class}/train_metrics.json:
             cache: false
 
   test:
     foreach:
       - preprocessor: SKCountVectorizer
-        model: logistic_regression
-        output: model.joblib
+        model_class: SKLogisticRegression
+        file: model.joblib
       - preprocessor: TFTokenizer
-        model: tf_conv1d
-        output: model.h5
+        model_class: TFConv1D
+        file: model.h5
     do:
       wdir: ../
-      cmd: python src/test.py --model-name="${item.model}" --preprocessor=${item.preprocessor}
+      cmd: python src/test.py --model-class=${item.model_class} --preprocessor=${item.preprocessor}
       deps:
-        - models/${item.model}/${item.output}
+        - models/${item.model_class}/${item.file}
         - src/test.py
       metrics:
-        - models/${item.model}_test_metrics.json:
+        - models/${item.model_class}/test_metrics.json:
             cache: false
 
   predict:
     foreach:
-      - model: logistic_regression
-        output: model.joblib
-      - model: tf_conv1d
-        output: model.h5
+      - model_class: SKLogisticRegression
+        file: model.joblib
+      - model_class: TFConv1D
+        file: model.h5
     do:
       wdir: ../
-      cmd: python src/predict.py --model-name="${item.model}"
+      cmd: python src/predict.py --model-class=${item.model_class}
       deps:
         - data/raw/test.csv
-        - models/${item.model}
-        - models/${item.model}_test_metrics.json
+        - models/${item.model_class}/test_metrics.json
         - src/predict.py
-        - models/${item.model}/${item.output}
+        - models/${item.model_class}/${item.file}
       outs:
-        - data/predictions/${item.model}_prediction.csv
+        - data/predictions/${item.model_class}_prediction.csv

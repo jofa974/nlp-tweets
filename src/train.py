@@ -2,29 +2,23 @@ import argparse
 import json
 from pathlib import Path
 
-import joblib
-import numpy as np
-import tensorflow as tf
 from sklearn.metrics import f1_score
 
 from constants import PARAMS
-from models import factory
+from models import SKLogisticRegression, TFConv1D
 from prepare import SKCountVectorizer, TFTokenizer
 
 
-def train(model_name, preprocessor_name):
+def train(model_class, preprocessor_class):
 
-    out_path = Path(f"data/prepared/{preprocessor_name}")
+    out_path = Path(f"data/prepared/{preprocessor_class}")
     with open(out_path / "texts.json", "r") as f:
         X_train = json.load(f)["train"]
 
     with open(out_path / "labels.json", "r") as f:
         Y_train = json.load(f)["train"]
 
-    # TODO: use factory
-    constructors = {"SKCountVectorizer": SKCountVectorizer, "TFTokenizer": TFTokenizer}
-
-    preprocessor = constructors[args.preprocessor]()
+    preprocessor = globals()[preprocessor_class]()
     preprocessor.load()
     X_train = preprocessor.apply_preprocessor(X_train)
 
@@ -32,19 +26,20 @@ def train(model_name, preprocessor_name):
         "vocab_size": preprocessor.vocab_size,
         "input_shape": X_train.shape[1],
         "lr": PARAMS["lr"],
+        "name": model_class,
     }
 
-    model = factory.create(model_name, **kwargs)
+    model = globals()[model_class](**kwargs)
     model.make_model()
     model.fit(X_train, Y_train)
 
     Y_train_pred = model.predict(X_train)
     metrics = {"f1_score": f1_score(y_true=Y_train, y_pred=Y_train_pred)}
 
-    with open(f"models/{model_name}_train_metrics.json", "w") as f:
+    with open(f"models/{model_class}/train_metrics.json", "w") as f:
         json.dump(metrics, f)
 
-    model.save(model_name)
+    model.save(model_class)
 
 
 if __name__ == "__main__":
@@ -56,17 +51,17 @@ if __name__ == "__main__":
 
     parser = argparse.ArgumentParser(description="Train model")
     parser.add_argument(
-        "--model-name",
+        "--model-class",
         type=str,
-        default="logistic_regression",
-        help="A model name. Must be a class registered in src/models.py:factory",
+        default="SKLogisticRegression",
+        help="A model class. Must be implemented in a model.py file.",
     )
     parser.add_argument(
         "--preprocessor",
         type=str,
         default="SKCountVectorizer",
-        help="A preprocessor's name. Must be a sub-class of Preprocessor",
+        help="A preprocessor class. Must be a sub-class of Preprocessor.",
     )
 
     args = parser.parse_args()
-    train(args.model_name, args.preprocessor)
+    train(args.model_class, args.preprocessor)
