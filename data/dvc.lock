@@ -1,0 +1,40 @@
+schema: '2.0'
+stages:
+  prepare_data@TFTokenizer:
+    cmd: python src/prepare.py --preprocessor=TFTokenizer
+    deps:
+    - path: data/raw/train.csv
+      md5: f147942c91d00d754503775341d13682
+      size: 987712
+    - path: src/prepare.py
+      md5: 6084bd323f3ed1f258fea36f46c01868
+      size: 4976
+    outs:
+    - path: data/prepared/TFTokenizer/labels.json
+      md5: 9b82a809810ad0411147c95d06a5c946
+      size: 22869
+    - path: data/prepared/TFTokenizer/preproc.joblib
+      md5: ce7fa6cf63cf8d02d99b15b5471a0ac8
+      size: 667924
+    - path: data/prepared/TFTokenizer/texts.json
+      md5: 158c1657f6d3f1c0bcc3e69e1b815818
+      size: 523215
+  prepare_data@SKCountVectorizer:
+    cmd: python src/prepare.py --preprocessor=SKCountVectorizer
+    deps:
+    - path: data/raw/train.csv
+      md5: f147942c91d00d754503775341d13682
+      size: 987712
+    - path: src/prepare.py
+      md5: 6084bd323f3ed1f258fea36f46c01868
+      size: 4976
+    outs:
+    - path: data/prepared/SKCountVectorizer/labels.json
+      md5: 9b82a809810ad0411147c95d06a5c946
+      size: 22869
+    - path: data/prepared/SKCountVectorizer/preproc.joblib
+      md5: faf800d6cfde453da68c96b529af3c01
+      size: 222716
+    - path: data/prepared/SKCountVectorizer/texts.json
+      md5: 158c1657f6d3f1c0bcc3e69e1b815818
+      size: 523215

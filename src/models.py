@@ -19,10 +19,10 @@ class SKLogisticRegression:
         return self.model.predict(X)
 
     def save(self, model_name):
-        joblib.dump(self.model, f"models/{model_name}")
+        joblib.dump(self.model, f"models/{model_name}/model.joblib")
 
     def load(self, model_name):
-        self.model = joblib.load(f"models/{model_name}.joblib")
+        self.model = joblib.load(f"models/{model_name}/model.joblib")
 
 
 class TFConv1D:
@@ -63,16 +63,16 @@ class TFConv1D:
     def fit(self, X, Y):
         data = tf.data.Dataset.from_tensor_slices((X, Y))
         data = data.batch(64)
-        self.model.fit(data, epochs=200)
+        self.model.fit(data, epochs=50)
 
     def predict(self, X):
         return self.model.predict(X)
 
     def save(self, model_name):
-        self.model.save(f"models/{model_name}")
+        self.model.save(f"models/{model_name}/model.h5")
 
     def load(self, model_name):
-        self.model = tf.keras.models.load_model(f"models/{model_name}")
+        self.model = tf.keras.models.load_model(f"models/{model_name}/model.h5")
 
 
 class ModelFactory:

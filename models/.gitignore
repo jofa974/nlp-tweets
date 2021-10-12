@@ -1,6 +1,5 @@
-/test_metrics.json
-/train_metrics.json
-/LogisticRegression.joblib
-/logistic_regression.joblib
-/logistic_regression
-/tf_conv1d
+*joblib
+*h5
+assets
+variables
+*.pb

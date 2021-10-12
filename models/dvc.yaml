@@ -1,0 +1,59 @@
+stages:
+  train:
+    foreach:
+      - preprocessor: SKCountVectorizer
+        model: logistic_regression
+        output: model.joblib
+      - preprocessor: TFTokenizer
+        model: tf_conv1d
+        output: model.h5
+    do:
+      wdir: ../
+      cmd: python src/train.py --model-name="${item.model}" --preprocessor=${item.preprocessor}
+      deps:
+        - data/prepared/${item.preprocessor}/texts.json
+        - data/prepared/${item.preprocessor}/labels.json
+        - data/prepared/${item.preprocessor}/preproc.joblib
+        - src/train.py
+        - models/${item.model}/model.py
+      outs:
+        - models/${item.model}/${item.output}
+      metrics:
+        - models/${item.model}_train_metrics.json:
+            cache: false
+
+  test:
+    foreach:
+      - preprocessor: SKCountVectorizer
+        model: logistic_regression
+        output: model.joblib
+      - preprocessor: TFTokenizer
+        model: tf_conv1d
+        output: model.h5
+    do:
+      wdir: ../
+      cmd: python src/test.py --model-name="${item.model}" --preprocessor=${item.preprocessor}
+      deps:
+        - models/${item.model}/${item.output}
+        - src/test.py
+      metrics:
+        - models/${item.model}_test_metrics.json:
+            cache: false
+
+  predict:
+    foreach:
+      - model: logistic_regression
+        output: model.joblib
+      - model: tf_conv1d
+        output: model.h5
+    do:
+      wdir: ../
+      cmd: python src/predict.py --model-name="${item.model}"
+      deps:
+        - data/raw/test.csv
+        - models/${item.model}
+        - models/${item.model}_test_metrics.json
+        - src/predict.py
+        - models/${item.model}/${item.output}
+      outs:
+        - data/predictions/${item.model}_prediction.csv
