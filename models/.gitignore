@@ -1,6 +1,6 @@
 /test_metrics.json
-/${item.name}.pickle
 /train_metrics.json
-/${item.name}.joblib
 /LogisticRegression.joblib
 /logistic_regression.joblib
+/logistic_regression
+/tf_conv1d

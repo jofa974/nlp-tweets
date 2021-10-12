@@ -7,6 +7,7 @@ import numpy as np
 import tensorflow as tf
 from sklearn.metrics import f1_score
 
+from models import factory
 from prepare import SKCountVectorizer, TFTokenizer
 
 
@@ -26,7 +27,8 @@ def test(model_name, preprocessor_name):
     preprocessor.load()
     X_test = preprocessor.apply_preprocessor(X_test)
 
-    model = joblib.load(f"models/{model_name}.joblib")
+    model = factory.create(model_name)
+    model.load(model_name)
 
     Y_test_pred = model.predict(X_test)
     metrics = {"f1_score": f1_score(y_true=Y_test, y_pred=Y_test_pred)}

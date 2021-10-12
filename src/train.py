@@ -28,9 +28,14 @@ def train(model_name, preprocessor_name):
     preprocessor.load()
     X_train = preprocessor.apply_preprocessor(X_train)
 
-    kwargs = {"vocab_size": preprocessor.vocab_size, "input_shape": X_train.shape[1]}
+    kwargs = {
+        "vocab_size": preprocessor.vocab_size,
+        "input_shape": X_train.shape[1],
+        "lr": PARAMS["lr"],
+    }
 
     model = factory.create(model_name, **kwargs)
+    model.make_model()
     model.fit(X_train, Y_train)
 
     Y_train_pred = model.predict(X_train)
@@ -39,7 +44,7 @@ def train(model_name, preprocessor_name):
     with open(f"models/{model_name}_train_metrics.json", "w") as f:
         json.dump(metrics, f)
 
-    joblib.dump(model, f"models/{model_name}.joblib")
+    model.save(model_name)
 
 
 if __name__ == "__main__":

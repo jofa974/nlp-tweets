@@ -21,7 +21,7 @@ stages:
         - data/prepared/${item.preprocessor}/preproc.joblib
         - src/train.py
       outs:
-        - models/${item.name}.joblib
+        - models/${item.name}
       metrics:
         - models/${item.name}_train_metrics.json:
             cache: false
@@ -29,9 +29,9 @@ stages:
   test:
     foreach: ${models}
     do:
-      cmd: python src/test.py --model-name="${item.name}"  --preprocessor=${item.preprocessor}
+      cmd: python src/test.py --model-name="${item.name}" --preprocessor=${item.preprocessor}
       deps:
-        - models/${item.name}.joblib
+        - models/${item.name}
         - src/test.py
       metrics:
         - models/${item.name}_test_metrics.json:
@@ -40,10 +40,10 @@ stages:
   predict:
     foreach: ${models}
     do:
-      cmd: python src/predict.py
+      cmd: python src/predict.py --model-name="${item.name}"
       deps:
         - data/raw/test.csv
-        - models/${item.name}.joblib
+        - models/${item.name}
         - models/${item.name}_test_metrics.json
         - src/predict.py
       outs:

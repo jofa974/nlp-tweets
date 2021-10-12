@@ -1,3 +1,4 @@
+import joblib
 import tensorflow as tf
 from sklearn.linear_model import LogisticRegression
 
@@ -5,26 +6,40 @@ from logger import logger
 
 
 class SKLogisticRegression:
-    def __init__(self, vocab_size, input_shape):
+    def __init__(self, **kwargs):
+        self.model = None
+
+    def make_model(self):
         self.model = LogisticRegression(max_iter=100)
 
-    def fit(self, *args, **kwargs):
-        self.model.fit(*args, **kwargs)
+    def fit(self, X, Y):
+        self.model.fit(X, Y)
 
-    def predict(self, *args, **kwargs):
-        return self.model.predict(*args, **kwargs)
+    def predict(self, X):
+        return self.model.predict(X)
+
+    def save(self, model_name):
+        joblib.dump(self.model, f"models/{model_name}")
+
+    def load(self, model_name):
+        self.model = joblib.load(f"models/{model_name}.joblib")
 
 
 class TFConv1D:
-    def __init__(self, vocab_size, input_shape):
+    def __init__(self, **kwargs):
+        self.vocab_size = kwargs.get("vocab_size", 0)
+        self.input_shape = kwargs.get("input_shape", 1)
+        self.lr = kwargs.get("lr", 1e-1)
+
+    def make_model(self):
         self.model = tf.keras.Sequential(
             [
                 # Layer Input Word Embedding
                 tf.keras.layers.Embedding(
-                    vocab_size + 1,
+                    self.vocab_size + 1,
                     output_dim=64,
                     input_shape=[
-                        input_shape,
+                        self.input_shape,
                     ],
                 ),
                 tf.keras.layers.Conv1D(16, 3, activation="relu"),
@@ -36,15 +51,28 @@ class TFConv1D:
                 tf.keras.layers.Dense(32, activation="relu"),
                 tf.keras.layers.Dropout(0.2),
                 # Output layer with number of output neurons equal to class number with softmax function
-                tf.keras.layers.Dense(5, activation="softmax"),
+                tf.keras.layers.Dense(1, activation="softmax"),
             ]
         )
+        self.model.compile(
+            optimizer=tf.keras.optimizers.Adam(learning_rate=self.lr),
+            loss=tf.keras.losses.BinaryCrossentropy(),
+            metrics=["accuracy"],
+        )
 
-    def fit(self, *args, **kwargs):
-        self.model.fit(*args, **kwargs)
+    def fit(self, X, Y):
+        data = tf.data.Dataset.from_tensor_slices((X, Y))
+        data = data.batch(64)
+        self.model.fit(data, epochs=10)
 
-    def predict(self, *args, **kwargs):
-        return self.model.predict(*args, **kwargs)
+    def predict(self, X):
+        return self.model.predict(X)
+
+    def save(self, model_name):
+        self.model.save(f"models/{model_name}")
+
+    def load(self, model_name):
+        self.model = tf.keras.models.load_model(f"models/{model_name}")
 
 
 class ModelFactory:

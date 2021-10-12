@@ -1,4 +1,9 @@
+lr: 0.001
+
 models:
   LogisticRegression:
     name: logistic_regression
     preprocessor: SKCountVectorizer
+  Embedding_Conv1D:
+    name: tf_conv1d
+    preprocessor: TFTokenizer

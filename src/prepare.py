@@ -115,7 +115,8 @@ class Preprocessor(ABC):
 
         logger.info("Done.")
 
-    @abstractproperty
+    @property
+    @abstractmethod
     def vocab_size(self):
         pass
 
@@ -136,6 +137,7 @@ class TFTokenizer(Preprocessor):
         )
         return processed_text
 
+    @property
     def vocab_size(self):
         return len(self.preprocessor.word_index)
 
@@ -153,8 +155,9 @@ class SKCountVectorizer(Preprocessor):
         processed_text = self.preprocessor.transform(texts)
         return processed_text
 
+    @property
     def vocab_size(self):
-        return len(self.preprocessor.vocabulary)
+        return len(self.preprocessor.vocabulary_)
 
 
 if __name__ == "__main__":
@@ -162,7 +165,7 @@ if __name__ == "__main__":
     parser.add_argument(
         "--preprocessor",
         type=str,
-        default="TFTokenizer",
+        default="SKCountVectorizer",
         help="A preprocessor's name. Must be a sub-class of Preprocessor",
     )
     args = parser.parse_args()
