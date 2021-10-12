@@ -8,6 +8,7 @@ import joblib
 import pandas as pd
 import spacy
 import tensorflow as tf
+from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.model_selection import train_test_split
 from spacy.lang.en.stop_words import STOP_WORDS
 from tqdm import tqdm
@@ -18,16 +19,23 @@ from logger import logger
 
 class Preprocessor(ABC):
     def __init__(self):
-        self.out_path = Path("data/prepared")
+        self.preprocessor = None
+        self.out_path = Path("data/prepared") / self.__class__.__name__
         self.out_path.mkdir(parents=True, exist_ok=True)
 
     @abstractmethod
-    def preprocess(self, texts):
+    def make_preprocessor(self, texts):
         pass
 
+    def load(self):
+        self.preprocessor = joblib.load(self.out_path / "preproc.joblib")
+
     @abstractmethod
-    def save(self, out_path):
+    def apply_preprocessor(self, texts):
         pass
+
+    def save(self):
+        joblib.dump(self.preprocessor, self.out_path / "preproc.joblib")
 
     def cleanup(self, text):
 
@@ -102,26 +110,41 @@ class Preprocessor(ABC):
 
         self.read_clean()
         self.tts()
-        self.preprocess()
+        self.make_preprocessor()
         self.save()
 
         logger.info("Done.")
 
 
-class PreprocessorTFTokenizer(Preprocessor):
+class TFTokenizer(Preprocessor):
     def __init__(self):
-        super(PreprocessorTFTokenizer, self).__init__()
-        self.name = "tokenizer"
-        self.tokenizer = None
+        super(TFTokenizer, self).__init__()
 
-    def save(self):
-        joblib.dump(self.tokenizer, self.out_path / f"{self.name}.joblib")
-
-    def preprocess(self):
+    def make_preprocessor(self):
         logger.info("Tokenizing...")
-        tokenizer = tf.keras.preprocessing.text.Tokenizer()
-        tokenizer.fit_on_texts(self.df["text_clean"])
-        self.tokenizer = tokenizer
+        self.preprocessor = tf.keras.preprocessing.text.Tokenizer()
+        self.preprocessor.fit_on_texts(self.df["text_clean"])
+
+    def apply_preprocessor(self, texts):
+        processed_text = self.preprocessor.texts_to_sequences(texts)
+        processed_text = tf.keras.preprocessing.sequence.pad_sequences(
+            processed_text, padding="post"
+        )
+        return processed_text
+
+
+class SKCountVectorizer(Preprocessor):
+    def __init__(self):
+        super(SKCountVectorizer, self).__init__()
+
+    def make_preprocessor(self):
+        logger.info("Vectorizing...")
+        self.preprocessor = CountVectorizer()
+        self.preprocessor.fit(self.df["text_clean"])
+
+    def apply_preprocessor(self, texts):
+        processed_text = self.preprocessor.transform(texts)
+        return processed_text
 
 
 if __name__ == "__main__":
@@ -129,9 +152,12 @@ if __name__ == "__main__":
     parser.add_argument(
         "--preprocessor",
         type=str,
-        default="PreprocessorTFTokenizer",
-        help="A model name. Must be a class registered in src/models.py:factory",
+        default="TFTokenizer",
+        help="A preprocessor's name. Must be a sub-class of Preprocessor",
     )
+    args = parser.parse_args()
+    # TODO: use factory
+    constructors = {"SKCountVectorizer": SKCountVectorizer, "TFTokenizer": TFTokenizer}
 
-    preprocessor = PreprocessorTFTokenizer()
+    preprocessor = constructors[args.preprocessor]()
     preprocessor.prepare()

@@ -1,57 +1,26 @@
 schema: '2.0'
 stages:
-  fetch_data:
-    cmd: ./src/fetch_data.sh
-    outs:
-    - path: data/sample_submission.csv
-      md5: e07af9cfb75c09d368437c2c1c7900e9
-      size: 22746
-    - path: data/test.csv
-      md5: ff248529f207ea164d73636e5b1b251d
-      size: 420783
-    - path: data/train.csv
-      md5: f147942c91d00d754503775341d13682
-      size: 987712
-  prepare_data:
-    cmd: python src/prepare.py
-    deps:
-    - path: data/raw/train.csv
-      md5: f147942c91d00d754503775341d13682
-      size: 987712
-    - path: src/prepare.py
-      md5: 04b04e8baa9c72be3d0cbf87d7651792
-      size: 3742
-    outs:
-    - path: data/prepared/labels.json
-      md5: 9b82a809810ad0411147c95d06a5c946
-      size: 22869
-    - path: data/prepared/texts.json
-      md5: 158c1657f6d3f1c0bcc3e69e1b815818
-      size: 523215
-    - path: data/prepared/tokenizer.joblib
-      md5: 11be37fe1cf3cbc9b8ade6826ca23ce9
-      size: 667924
   train@LogisticRegression:
-    cmd: python src/train.py --model-name=LogisticRegression
+    cmd: python src/train.py --model-name="logistic_regression" --preprocessor=SKCountVectorizer
     deps:
-    - path: data/prepared/labels.json
+    - path: data/prepared/SKCountVectorizer/labels.json
       md5: 9b82a809810ad0411147c95d06a5c946
       size: 22869
-    - path: data/prepared/texts.json
+    - path: data/prepared/SKCountVectorizer/preproc.joblib
+      md5: 32cbbc931c3a5d62e04c70b644f475fc
+      size: 222716
+    - path: data/prepared/SKCountVectorizer/texts.json
       md5: 158c1657f6d3f1c0bcc3e69e1b815818
       size: 523215
-    - path: data/prepared/tokenizer.joblib
-      md5: 11be37fe1cf3cbc9b8ade6826ca23ce9
-      size: 667924
     - path: src/train.py
-      md5: 25a395413208ce4780cf8272b1e7ea63
-      size: 1474
+      md5: 0b89b5dc14841462bf393bae81f85019
+      size: 1821
     outs:
-    - path: models/LogisticRegression.joblib
-      md5: 00956a848efd1f8371d6297c37401c05
-      size: 1001
-    - path: models/LogisticRegression_train_metrics.json
-      md5: 31884f8174044a74d068214cc97b7efe
+    - path: models/logistic_regression.joblib
+      md5: 1112172fd2e9b9f332fd3d7720a2c2d8
+      size: 133075
+    - path: models/logistic_regression_train_metrics.json
+      md5: 4e6f8bfa366b18e95875ace31f754e1f
       size: 32
   predict@LogisticRegression:
     cmd: python src/predict.py
@@ -59,29 +28,48 @@ stages:
     - path: data/raw/test.csv
       md5: ff248529f207ea164d73636e5b1b251d
       size: 420783
-    - path: models/LogisticRegression.joblib
-      md5: 00956a848efd1f8371d6297c37401c05
-      size: 1001
-    - path: models/LogisticRegression_test_metrics.json
-      md5: 2d0aa99a3ed4793ad4aa4c1e47b36e25
-      size: 33
+    - path: models/logistic_regression.joblib
+      md5: 1112172fd2e9b9f332fd3d7720a2c2d8
+      size: 133075
+    - path: models/logistic_regression_test_metrics.json
+      md5: 7b699292dba529242bd5ea2a55fb8602
+      size: 32
     - path: src/predict.py
-      md5: ee92c21fece36cf1378831cca45f9c4d
-      size: 610
+      md5: 419b71030d2fe178c9394628a7f5ba3e
+      size: 611
     outs:
-    - path: data/predictions/LogisticRegression_prediction.csv
+    - path: data/predictions/logistic_regression_prediction.csv
       md5: d41d8cd98f00b204e9800998ecf8427e
       size: 0
   test@LogisticRegression:
-    cmd: python src/test.py
+    cmd: python src/test.py --model-name="logistic_regression"  --preprocessor=SKCountVectorizer
     deps:
-    - path: models/LogisticRegression.joblib
-      md5: 00956a848efd1f8371d6297c37401c05
-      size: 1001
+    - path: models/logistic_regression.joblib
+      md5: 1112172fd2e9b9f332fd3d7720a2c2d8
+      size: 133075
     - path: src/test.py
-      md5: dd28d322d0d39e4d02b2e84a84a91087
-      size: 1328
+      md5: ebf9f22efab791988dc6f9823f5769b2
+      size: 1678
     outs:
-    - path: models/LogisticRegression_test_metrics.json
-      md5: 2d0aa99a3ed4793ad4aa4c1e47b36e25
-      size: 33
+    - path: models/logistic_regression_test_metrics.json
+      md5: 7b699292dba529242bd5ea2a55fb8602
+      size: 32
+  prepare_data@LogisticRegression:
+    cmd: python src/prepare.py --preprocessor=SKCountVectorizer
+    deps:
+    - path: data/raw/train.csv
+      md5: f147942c91d00d754503775341d13682
+      size: 987712
+    - path: src/prepare.py
+      md5: 4257ce97fc29f969bec0fd0b55fef1ce
+      size: 4697
+    outs:
+    - path: data/prepared/SKCountVectorizer/labels.json
+      md5: 9b82a809810ad0411147c95d06a5c946
+      size: 22869
+    - path: data/prepared/SKCountVectorizer/preproc.joblib
+      md5: 32cbbc931c3a5d62e04c70b644f475fc
+      size: 222716
+    - path: data/prepared/SKCountVectorizer/texts.json
+      md5: 158c1657f6d3f1c0bcc3e69e1b815818
+      size: 523215

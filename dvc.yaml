@@ -1,38 +1,40 @@
 stages:
   prepare_data:
-    cmd: python src/prepare.py
-    deps:
-      - data/raw/train.csv
-      - src/prepare.py
-    outs:
-      - data/prepared/texts.json
-      - data/prepared/labels.json
-      - data/prepared/tokenizer.joblib
+    foreach: ${models}
+    do:
+      cmd: python src/prepare.py --preprocessor=${item.preprocessor}
+      deps:
+        - data/raw/train.csv
+        - src/prepare.py
+      outs:
+        - data/prepared/${item.preprocessor}/texts.json
+        - data/prepared/${item.preprocessor}/labels.json
+        - data/prepared/${item.preprocessor}/preproc.joblib
 
   train:
     foreach: ${models}
     do:
-      cmd: python src/train.py --model-name=${item}
+      cmd: python src/train.py --model-name="${item.name}" --preprocessor=${item.preprocessor}
       deps:
-        - data/prepared/texts.json
-        - data/prepared/labels.json
-        - data/prepared/tokenizer.joblib
+        - data/prepared/${item.preprocessor}/texts.json
+        - data/prepared/${item.preprocessor}/labels.json
+        - data/prepared/${item.preprocessor}/preproc.joblib
         - src/train.py
       outs:
-        - models/${item}.joblib
+        - models/${item.name}.joblib
       metrics:
-        - models/${item}_train_metrics.json:
+        - models/${item.name}_train_metrics.json:
             cache: false
 
   test:
     foreach: ${models}
     do:
-      cmd: python src/test.py
+      cmd: python src/test.py --model-name="${item.name}"  --preprocessor=${item.preprocessor}
       deps:
-        - models/${item}.joblib
+        - models/${item.name}.joblib
         - src/test.py
       metrics:
-        - models/${item}_test_metrics.json:
+        - models/${item.name}_test_metrics.json:
             cache: false
 
   predict:
@@ -41,8 +43,8 @@ stages:
       cmd: python src/predict.py
       deps:
         - data/raw/test.csv
-        - models/${item}.joblib
-        - models/${item}_test_metrics.json
+        - models/${item.name}.joblib
+        - models/${item.name}_test_metrics.json
         - src/predict.py
       outs:
-        - data/predictions/${item}_prediction.csv
+        - data/predictions/${item.name}_prediction.csv

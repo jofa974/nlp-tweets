@@ -24,4 +24,4 @@ class ModelFactory:
 
 
 factory = ModelFactory()
-factory.register_builder("LogisticRegression", LogisticRegression)
+factory.register_builder("logistic_regression", LogisticRegression)

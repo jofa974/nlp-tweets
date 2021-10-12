@@ -7,19 +7,24 @@ import numpy as np
 import tensorflow as tf
 from sklearn.metrics import f1_score
 
+from prepare import SKCountVectorizer, TFTokenizer
 
-def test(model_name):
 
-    out_path = Path("data/prepared")
+def test(model_name, preprocessor_name):
+
+    out_path = Path(f"data/prepared/{preprocessor_name}")
     with open(out_path / "texts.json", "r") as f:
         X_test = json.load(f)["test"]
 
     with open(out_path / "labels.json", "r") as f:
         Y_test = json.load(f)["test"]
 
-    tokenizer = joblib.load(out_path / "tokenizer.joblib")
-    X_test = tokenizer.texts_to_sequences(X_test)
-    X_test = tf.keras.preprocessing.sequence.pad_sequences(X_test, padding="post")
+    # TODO: use factory
+    constructors = {"SKCountVectorizer": SKCountVectorizer, "TFTokenizer": TFTokenizer}
+
+    preprocessor = constructors[args.preprocessor]()
+    preprocessor.load()
+    X_test = preprocessor.apply_preprocessor(X_test)
 
     model = joblib.load(f"models/{model_name}.joblib")
 
@@ -40,9 +45,15 @@ if __name__ == "__main__":
     parser.add_argument(
         "--model-name",
         type=str,
-        default="LogisticRegression",
+        default="logistic_regression",
         help="A model name. Must be a class registered in src/models.py:factory",
+    )
+    parser.add_argument(
+        "--preprocessor",
+        type=str,
+        default="SKCountVectorizer",
+        help="A preprocessor's name. Must be a sub-class of Preprocessor",
     )
 
     args = parser.parse_args()
-    test(args.model_name)
+    test(args.model_name, args.preprocessor)

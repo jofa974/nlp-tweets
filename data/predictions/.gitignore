@@ -1,2 +1,1 @@
-/${item.name}_prediction.csv
-/LogisticRegression_prediction.csv
+/logistic_regression_prediction.csv

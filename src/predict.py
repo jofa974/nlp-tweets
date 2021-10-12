@@ -17,7 +17,7 @@ if __name__ == "__main__":
     parser.add_argument(
         "--model-name",
         type=str,
-        default="LogisticRegression",
+        default="logistic_regression",
         help="A model name. Must be a class registered in src/models.py:factory",
     )
 
