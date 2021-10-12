@@ -16,7 +16,7 @@ jobs:
           
           # Pull data & run-cache from gdrive and reproduce pipeline
           dvc pull data/raw --run-cache
-          dvc repro
+          dvc repro -R models
           
           # Report metrics
           echo "## Metrics" >> report.md
