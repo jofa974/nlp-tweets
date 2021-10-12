@@ -1,11 +1,11 @@
 import argparse
-import joblib
 import json
-
-import numpy as np
-from sklearn.metrics import f1_score
-
 from pathlib import Path
+
+import joblib
+import numpy as np
+import tensorflow as tf
+from sklearn.metrics import f1_score
 
 
 def test(model_name):
@@ -17,8 +17,9 @@ def test(model_name):
     with open(out_path / "labels.json", "r") as f:
         Y_test = json.load(f)["test"]
 
-    vectorizer = joblib.load(out_path / "vectorizer.joblib")
-    X_test = vectorizer.transform(X_test).toarray()
+    tokenizer = joblib.load(out_path / "tokenizer.joblib")
+    X_test = tokenizer.texts_to_sequences(X_test)
+    X_test = tf.keras.preprocessing.sequence.pad_sequences(X_test, padding="post")
 
     model = joblib.load(f"models/{model_name}.joblib")
 
@@ -35,7 +36,7 @@ if __name__ == "__main__":
     log = setup_applevel_logger(file_name="app_debug.log")
 
     log.info("I am testing !")
-    parser = argparse.ArgumentParser(description="Train model")
+    parser = argparse.ArgumentParser(description="Test model")
     parser.add_argument(
         "--model-name",
         type=str,

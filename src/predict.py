@@ -13,7 +13,7 @@ def predict(model_name):
 if __name__ == "__main__":
     print("I am making prediction !")
 
-    parser = argparse.ArgumentParser(description="Train model")
+    parser = argparse.ArgumentParser(description="Prediction")
     parser.add_argument(
         "--model-name",
         type=str,

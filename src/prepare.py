@@ -6,6 +6,7 @@ import joblib
 import numpy as np
 import pandas as pd
 import spacy
+import tensorflow as tf
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.model_selection import train_test_split
 from spacy.lang.en.stop_words import STOP_WORDS
@@ -58,13 +59,13 @@ def prepare():
     )
 
     log.info("Vectorizing...")
-    vectorizer = CountVectorizer(stop_words="english")
-    vectorizer.fit(X_train)
+    tokenizer = tf.keras.preprocessing.text.Tokenizer()
+    tokenizer.fit_on_texts(df["text_clean"])
 
     out_path = Path("data/prepared")
     out_path.mkdir(parents=True, exist_ok=True)
 
-    joblib.dump(vectorizer, out_path / "vectorizer.joblib")
+    joblib.dump(tokenizer, out_path / "tokenizer.joblib")
 
     log.info("Saving texts...")
     texts = {"train": X_train.tolist(), "val": X_val.tolist(), "test": X_test.tolist()}

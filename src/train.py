@@ -1,12 +1,14 @@
 import argparse
 import json
+from pathlib import Path
 
 import joblib
 import numpy as np
+import tensorflow as tf
 from sklearn.metrics import f1_score
-from pathlib import Path
-from models import factory
+
 from constants import PARAMS
+from models import factory
 
 
 def train(model_name):
@@ -18,8 +20,9 @@ def train(model_name):
     with open(out_path / "labels.json", "r") as f:
         Y_train = json.load(f)["train"]
 
-    vectorizer = joblib.load(out_path / "vectorizer.joblib")
-    X_train = vectorizer.transform(X_train).toarray()
+    tokenizer = joblib.load(out_path / "tokenizer.joblib")
+    X_train = tokenizer.texts_to_sequences(X_train)
+    X_train = tf.keras.preprocessing.sequence.pad_sequences(X_train, padding="post")
 
     model = factory.create(model_name, **PARAMS["models"][model_name]["kwargs"])
     model.fit(X_train, Y_train)

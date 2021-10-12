@@ -7,7 +7,7 @@ stages:
     outs:
       - data/prepared/texts.json
       - data/prepared/labels.json
-      - data/prepared/vectorizer.joblib
+      - data/prepared/tokenizer.joblib
 
   train:
     foreach: ${models}
@@ -16,7 +16,7 @@ stages:
       deps:
         - data/prepared/texts.json
         - data/prepared/labels.json
-        - data/prepared/vectorizer.joblib
+        - data/prepared/tokenizer.joblib
         - src/train.py
       outs:
         - models/${item.name}.joblib
@@ -42,6 +42,7 @@ stages:
       deps:
         - data/raw/test.csv
         - models/${item.name}.joblib
+        - models/${item.name}_test_metrics.json
         - src/predict.py
       outs:
         - data/predictions/${item.name}_prediction.csv

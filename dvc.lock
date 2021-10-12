@@ -19,8 +19,8 @@ stages:
       md5: f147942c91d00d754503775341d13682
       size: 987712
     - path: src/prepare.py
-      md5: c136e8e65e16f03e47a8db1ab17d43f6
-      size: 2227
+      md5: 544fd61087da5d3536fa1ab0c58f8296
+      size: 2267
     outs:
     - path: data/prepared/labels.json
       md5: 9b82a809810ad0411147c95d06a5c946
@@ -28,9 +28,9 @@ stages:
     - path: data/prepared/texts.json
       md5: 158c1657f6d3f1c0bcc3e69e1b815818
       size: 523215
-    - path: data/prepared/vectorizer.joblib
-      md5: 73becdc64b3d9fb89226f8eac132ba6b
-      size: 160770
+    - path: data/prepared/tokenizer.joblib
+      md5: b5a65043afd6abf64b6045be9170b290
+      size: 667924
   train@LogisticRegression:
     cmd: python src/train.py --model-name=LogisticRegression
     deps:
@@ -40,19 +40,22 @@ stages:
     - path: data/prepared/texts.json
       md5: 158c1657f6d3f1c0bcc3e69e1b815818
       size: 523215
-    - path: data/prepared/vectorizer.joblib
-      md5: 73becdc64b3d9fb89226f8eac132ba6b
-      size: 160770
+    - path: data/prepared/tokenizer.joblib
+      md5: b5a65043afd6abf64b6045be9170b290
+      size: 667924
     - path: src/train.py
-      md5: 85330c57da90c3a769acc31e9af84f36
-      size: 1410
+      md5: f174a444ed7c5f5081e34477f440a2db
+      size: 1516
+    params:
+      params.yaml:
+        tts: 0.2
     outs:
     - path: models/LogisticRegression.joblib
-      md5: 51df8980120aeb9ba01aa25083615b95
-      size: 97267
+      md5: ed8102c230462283483bcacdd9cdb373
+      size: 1002
     - path: models/LogisticRegression_train_metrics.json
-      md5: e686cafb57e5c30085b8d9a8b355ea3d
-      size: 32
+      md5: 5e6e61a38d78fa178c7c7f7d5f35d242
+      size: 33
   predict@LogisticRegression:
     cmd: python src/predict.py
     deps:
@@ -60,11 +63,14 @@ stages:
       md5: ff248529f207ea164d73636e5b1b251d
       size: 420783
     - path: models/LogisticRegression.joblib
-      md5: 51df8980120aeb9ba01aa25083615b95
-      size: 97267
+      md5: ed8102c230462283483bcacdd9cdb373
+      size: 1002
+    - path: models/LogisticRegression_test_metrics.json
+      md5: 7542ae2434e46b88c33bfd1cdece6e63
+      size: 33
     - path: src/predict.py
-      md5: b564ad9b22b68f9f872ac8a18d2589e1
-      size: 611
+      md5: ee92c21fece36cf1378831cca45f9c4d
+      size: 610
     outs:
     - path: data/predictions/LogisticRegression_prediction.csv
       md5: d41d8cd98f00b204e9800998ecf8427e
@@ -73,12 +79,12 @@ stages:
     cmd: python src/test.py
     deps:
     - path: models/LogisticRegression.joblib
-      md5: 51df8980120aeb9ba01aa25083615b95
-      size: 97267
+      md5: ed8102c230462283483bcacdd9cdb373
+      size: 1002
     - path: src/test.py
-      md5: 2acffa58ba262b60784e1576b212253d
-      size: 1227
+      md5: dd28d322d0d39e4d02b2e84a84a91087
+      size: 1328
     outs:
     - path: models/LogisticRegression_test_metrics.json
-      md5: 924ed9152e2af0cf9efae75d7478fd0b
-      size: 32
+      md5: 7542ae2434e46b88c33bfd1cdece6e63
+      size: 33
