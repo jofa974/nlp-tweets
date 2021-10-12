@@ -12,16 +12,16 @@ stages:
   train:
     foreach: ${models}
     do:
-      cmd: python src/train.py --model-name=${item.name}
+      cmd: python src/train.py --model-name=${item}
       deps:
         - data/prepared/texts.json
         - data/prepared/labels.json
         - data/prepared/tokenizer.joblib
         - src/train.py
       outs:
-        - models/${item.name}.joblib
+        - models/${item}.joblib
       metrics:
-        - models/${item.name}_train_metrics.json:
+        - models/${item}_train_metrics.json:
             cache: false
 
   test:
@@ -29,10 +29,10 @@ stages:
     do:
       cmd: python src/test.py
       deps:
-        - models/${item.name}.joblib
+        - models/${item}.joblib
         - src/test.py
       metrics:
-        - models/${item.name}_test_metrics.json:
+        - models/${item}_test_metrics.json:
             cache: false
 
   predict:
@@ -41,8 +41,8 @@ stages:
       cmd: python src/predict.py
       deps:
         - data/raw/test.csv
-        - models/${item.name}.joblib
-        - models/${item.name}_test_metrics.json
+        - models/${item}.joblib
+        - models/${item}_test_metrics.json
         - src/predict.py
       outs:
-        - data/predictions/${item.name}_prediction.csv
+        - data/predictions/${item}_prediction.csv

@@ -4,7 +4,4 @@ prepare:
 tts: 0.2
 
 models:
-  LogisticRegression:
-    name: LogisticRegression
-    kwargs:
-      max_iter: 1000
+  - LogisticRegression

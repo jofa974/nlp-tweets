@@ -24,7 +24,7 @@ def train(model_name):
     X_train = tokenizer.texts_to_sequences(X_train)
     X_train = tf.keras.preprocessing.sequence.pad_sequences(X_train, padding="post")
 
-    model = factory.create(model_name, **PARAMS["models"][model_name]["kwargs"])
+    model = factory.create(model_name)
     model.fit(X_train, Y_train)
 
     Y_train_pred = model.predict(X_train)

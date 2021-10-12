@@ -1,4 +1,12 @@
+import tensorflow as tf
 from sklearn.linear_model import LogisticRegression
+
+from logger import logger
+
+
+class LogisticRegressionModel:
+    def __init__(self):
+        self.model = LogisticRegression(max_iter=100)
 
 
 class ModelFactory:
