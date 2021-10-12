@@ -1,7 +1,7 @@
 import argparse
 import json
 import re
-from abc import ABC, abstractmethod
+from abc import ABC, abstractmethod, abstractproperty
 from pathlib import Path
 
 import joblib
@@ -115,6 +115,10 @@ class Preprocessor(ABC):
 
         logger.info("Done.")
 
+    @abstractproperty
+    def vocab_size(self):
+        pass
+
 
 class TFTokenizer(Preprocessor):
     def __init__(self):
@@ -132,6 +136,9 @@ class TFTokenizer(Preprocessor):
         )
         return processed_text
 
+    def vocab_size(self):
+        return len(self.preprocessor.word_index)
+
 
 class SKCountVectorizer(Preprocessor):
     def __init__(self):
@@ -145,6 +152,9 @@ class SKCountVectorizer(Preprocessor):
     def apply_preprocessor(self, texts):
         processed_text = self.preprocessor.transform(texts)
         return processed_text
+
+    def vocab_size(self):
+        return len(self.preprocessor.vocabulary)
 
 
 if __name__ == "__main__":

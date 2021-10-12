@@ -28,7 +28,9 @@ def train(model_name, preprocessor_name):
     preprocessor.load()
     X_train = preprocessor.apply_preprocessor(X_train)
 
-    model = factory.create(model_name)
+    kwargs = {"vocab_size": preprocessor.vocab_size, "input_shape": X_train.shape[1]}
+
+    model = factory.create(model_name, **kwargs)
     model.fit(X_train, Y_train)
 
     Y_train_pred = model.predict(X_train)

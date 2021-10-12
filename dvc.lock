@@ -7,18 +7,18 @@ stages:
       md5: 9b82a809810ad0411147c95d06a5c946
       size: 22869
     - path: data/prepared/SKCountVectorizer/preproc.joblib
-      md5: 32cbbc931c3a5d62e04c70b644f475fc
+      md5: 07a3084bc1366bf1d34495cec1eed7c6
       size: 222716
     - path: data/prepared/SKCountVectorizer/texts.json
       md5: 158c1657f6d3f1c0bcc3e69e1b815818
       size: 523215
     - path: src/train.py
-      md5: 0b89b5dc14841462bf393bae81f85019
-      size: 1821
+      md5: 7a2d1cc2252486df2f8151861fe18643
+      size: 1918
     outs:
     - path: models/logistic_regression.joblib
-      md5: 1112172fd2e9b9f332fd3d7720a2c2d8
-      size: 133075
+      md5: a67ac66bf6b7add88526011a6b99b3d8
+      size: 133124
     - path: models/logistic_regression_train_metrics.json
       md5: 4e6f8bfa366b18e95875ace31f754e1f
       size: 32
@@ -29,8 +29,8 @@ stages:
       md5: ff248529f207ea164d73636e5b1b251d
       size: 420783
     - path: models/logistic_regression.joblib
-      md5: 1112172fd2e9b9f332fd3d7720a2c2d8
-      size: 133075
+      md5: a67ac66bf6b7add88526011a6b99b3d8
+      size: 133124
     - path: models/logistic_regression_test_metrics.json
       md5: 7b699292dba529242bd5ea2a55fb8602
       size: 32
@@ -45,8 +45,8 @@ stages:
     cmd: python src/test.py --model-name="logistic_regression"  --preprocessor=SKCountVectorizer
     deps:
     - path: models/logistic_regression.joblib
-      md5: 1112172fd2e9b9f332fd3d7720a2c2d8
-      size: 133075
+      md5: a67ac66bf6b7add88526011a6b99b3d8
+      size: 133124
     - path: src/test.py
       md5: ebf9f22efab791988dc6f9823f5769b2
       size: 1678
@@ -61,14 +61,14 @@ stages:
       md5: f147942c91d00d754503775341d13682
       size: 987712
     - path: src/prepare.py
-      md5: 4257ce97fc29f969bec0fd0b55fef1ce
-      size: 4697
+      md5: 85382ad1540302704ea35d90ec158ba6
+      size: 4929
     outs:
     - path: data/prepared/SKCountVectorizer/labels.json
       md5: 9b82a809810ad0411147c95d06a5c946
       size: 22869
     - path: data/prepared/SKCountVectorizer/preproc.joblib
-      md5: 32cbbc931c3a5d62e04c70b644f475fc
+      md5: 07a3084bc1366bf1d34495cec1eed7c6
       size: 222716
     - path: data/prepared/SKCountVectorizer/texts.json
       md5: 158c1657f6d3f1c0bcc3e69e1b815818
