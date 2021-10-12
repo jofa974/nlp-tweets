@@ -37,12 +37,12 @@ class TFConv1D:
                 # Layer Input Word Embedding
                 tf.keras.layers.Embedding(
                     self.vocab_size + 1,
-                    output_dim=64,
+                    output_dim=512,
                     input_shape=[
                         self.input_shape,
                     ],
                 ),
-                tf.keras.layers.Conv1D(16, 3, activation="relu"),
+                tf.keras.layers.Conv1D(128, 3, activation="relu"),
                 # Flatten
                 tf.keras.layers.Flatten(),
                 # Layer Dense classique
@@ -63,7 +63,7 @@ class TFConv1D:
     def fit(self, X, Y):
         data = tf.data.Dataset.from_tensor_slices((X, Y))
         data = data.batch(64)
-        self.model.fit(data, epochs=10)
+        self.model.fit(data, epochs=200)
 
     def predict(self, X):
         return self.model.predict(X)

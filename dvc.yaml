@@ -20,6 +20,7 @@ stages:
         - data/prepared/${item.preprocessor}/labels.json
         - data/prepared/${item.preprocessor}/preproc.joblib
         - src/train.py
+        - src/models.py
       outs:
         - models/${item.name}
       metrics:

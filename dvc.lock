@@ -12,6 +12,9 @@ stages:
     - path: data/prepared/SKCountVectorizer/texts.json
       md5: 158c1657f6d3f1c0bcc3e69e1b815818
       size: 523215
+    - path: src/models.py
+      md5: 4429a663f4ad7f5dfacc2e4cc8e9a04d
+      size: 2825
     - path: src/train.py
       md5: 499aa138294b1aa98e72f3bd9ea4de94
       size: 1965
@@ -87,7 +90,7 @@ stages:
       md5: 9b82a809810ad0411147c95d06a5c946
       size: 22869
     - path: data/prepared/TFTokenizer/preproc.joblib
-      md5: f78e663b3316e80a66663b4381b6f649
+      md5: 5bcf73db0721d23b5a252bf798fc7a5a
       size: 667924
     - path: data/prepared/TFTokenizer/texts.json
       md5: 158c1657f6d3f1c0bcc3e69e1b815818
@@ -99,18 +102,21 @@ stages:
       md5: 9b82a809810ad0411147c95d06a5c946
       size: 22869
     - path: data/prepared/TFTokenizer/preproc.joblib
-      md5: f78e663b3316e80a66663b4381b6f649
+      md5: 5bcf73db0721d23b5a252bf798fc7a5a
       size: 667924
     - path: data/prepared/TFTokenizer/texts.json
       md5: 158c1657f6d3f1c0bcc3e69e1b815818
       size: 523215
+    - path: src/models.py
+      md5: 4429a663f4ad7f5dfacc2e4cc8e9a04d
+      size: 2825
     - path: src/train.py
       md5: 499aa138294b1aa98e72f3bd9ea4de94
       size: 1965
     outs:
     - path: models/tf_conv1d
-      md5: 99974fc92ccce7bf8682975d47c9e11d.dir
-      size: 13284569
+      md5: 5e26423844a8faf46f418fd57459580c.dir
+      size: 106877359
       nfiles: 4
     - path: models/tf_conv1d_train_metrics.json
       md5: 8339555778c7fe1766637b98978ec1dd
@@ -119,8 +125,8 @@ stages:
     cmd: python src/test.py --model-name="tf_conv1d" --preprocessor=TFTokenizer
     deps:
     - path: models/tf_conv1d
-      md5: 99974fc92ccce7bf8682975d47c9e11d.dir
-      size: 13284569
+      md5: 5e26423844a8faf46f418fd57459580c.dir
+      size: 106877359
       nfiles: 4
     - path: src/test.py
       md5: 47c85f779a89ff1e34145ee5d4a3c767
@@ -136,8 +142,8 @@ stages:
       md5: ff248529f207ea164d73636e5b1b251d
       size: 420783
     - path: models/tf_conv1d
-      md5: 99974fc92ccce7bf8682975d47c9e11d.dir
-      size: 13284569
+      md5: 5e26423844a8faf46f418fd57459580c.dir
+      size: 106877359
       nfiles: 4
     - path: models/tf_conv1d_test_metrics.json
       md5: c2416183742e2f7f9354acbfb29aaa4d
