@@ -2,9 +2,9 @@ import argparse
 import json
 from pathlib import Path
 
+import yaml
 from sklearn.metrics import f1_score
 
-from constants import PARAMS
 from models import SKLogisticRegression, TFConv1D
 from prepare import SKCountVectorizer, TFTokenizer
 from src.logger import logger
@@ -21,26 +21,20 @@ def train(model_class, preprocessor_class):
 
     preprocessor = globals()[preprocessor_class]()
     preprocessor.load()
-    X_train = preprocessor.apply_preprocessor(X_train)
 
-    kwargs = {
-        "vocab_size": preprocessor.vocab_size,
-        "input_shape": X_train.shape[1],
-        "lr": PARAMS["lr"],
-        "name": model_class,
-    }
-
-    model = globals()[model_class](**kwargs)
+    model = globals()[model_class](
+        train=True, preprocessor=preprocessor, features=X_train, labels=Y_train
+    )
     model.make_model()
-    model.fit(X_train, Y_train)
+    model.fit()
 
-    Y_train_pred = model.predict(X_train)
+    Y_train_pred = model.predict()
     metrics = {"f1_score": f1_score(y_true=Y_train, y_pred=Y_train_pred)}
 
     with open(f"models/{model_class}/train_metrics.json", "w") as f:
         json.dump(metrics, f)
 
-    model.save(model_class)
+    model.save()
 
 
 if __name__ == "__main__":

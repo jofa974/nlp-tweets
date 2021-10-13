@@ -1,42 +1,83 @@
+from pathlib import Path
+
 import joblib
 import tensorflow as tf
+import yaml
 from sklearn.linear_model import LogisticRegression
 
 from src.logger import logger
 
 
-class SKLogisticRegression:
-    def __init__(self, **kwargs):
+class CustomModel:
+    def __init__(self, train=True, preprocessor=None, features=[], labels=[]):
         self.model = None
+        self.train = train
+        self.preprocessor = preprocessor
+        self.features = self.preprocessor.apply_preprocessor(features)
+        self.labels = labels
+        self.name = self.__class__.__name__
+        self.get_params()
+        self.make_dataset()
+
+    def make_dataset(self):
+        self.dataset = (self.features, self.labels)
 
     def make_model(self):
         self.model = LogisticRegression(max_iter=100)
 
-    def fit(self, X, Y):
-        self.model.fit(X, Y)
+    def fit(self):
+        self.model.fit(*self.dataset)
 
-    def predict(self, X):
-        return self.model.predict(X)
+    def predict(self):
+        return self.model.predict(self.features)
 
-    def save(self, model_name):
-        joblib.dump(self.model, f"models/{model_name}/model.joblib")
+    def save(self):
+        raise NotImplementedError
 
-    def load(self, model_name):
-        self.model = joblib.load(f"models/{model_name}/model.joblib")
+    def load(self):
+        raise NotImplementedError
+
+    def get_params(self):
+        module_path = Path(__file__).parent.resolve()
+        with open(module_path / f"../models/{self.name}/params.yaml", "r") as f:
+            self.params = yaml.safe_load(f)
 
 
-class TFConv1D:
-    def __init__(self, **kwargs):
-        self.vocab_size = kwargs.get("vocab_size", 0)
-        self.input_shape = kwargs.get("input_shape", 1)
-        self.lr = kwargs.get("lr", 1e-1)
+class SKLogisticRegression(CustomModel):
+    def __init__(self, train=True, preprocessor=None, features=[], labels=[]):
+        super(SKLogisticRegression, self).__init__(
+            train=train,
+            preprocessor=preprocessor,
+            features=features,
+            labels=labels,
+        )
 
     def make_model(self):
+        self.model = LogisticRegression(max_iter=100)
+
+    def save(self):
+        joblib.dump(self.model, f"models/{self.name}/model.joblib")
+
+    def load(self):
+        self.model = joblib.load(f"models/{self.name}/model.joblib")
+
+
+class TFConv1D(CustomModel):
+    def __init__(self, train=True, preprocessor=None, features=[], labels=[]):
+        super(TFConv1D, self).__init__(
+            train=train,
+            preprocessor=preprocessor,
+            features=features,
+            labels=labels,
+        )
+
+    def make_model(self):
+        vocab_size = self.preprocessor.vocab_size
         self.model = tf.keras.Sequential(
             [
                 # Layer Input Word Embedding
                 tf.keras.layers.Embedding(
-                    self.vocab_size + 1,
+                    vocab_size + 1,
                     output_dim=512,
                     input_shape=[
                         self.input_shape,
@@ -55,21 +96,24 @@ class TFConv1D:
             ]
         )
         self.model.compile(
-            optimizer=tf.keras.optimizers.Adam(learning_rate=self.lr),
+            optimizer=tf.keras.optimizers.Adam(learning_rate=self.params["lr"]),
             loss=tf.keras.losses.BinaryCrossentropy(),
             metrics=["accuracy"],
         )
 
-    def fit(self, X, Y):
-        data = tf.data.Dataset.from_tensor_slices((X, Y))
-        data = data.batch(64)
-        self.model.fit(data, epochs=50)
+    def make_dataset(self):
+        self.input_shape = self.features.shape[1]
 
-    def predict(self, X):
-        return self.model.predict(X)
+        buffer_size = 100000
+        self.dataset = tf.data.Dataset.from_tensor_slices((self.features, self.labels))
+        self.dataset = self.dataset.shuffle(buffer_size)
+        self.dataset = self.dataset.batch(self.params["batch_size"])
 
-    def save(self, model_name):
-        self.model.save(f"models/{model_name}/model.h5")
+    def fit(self):
+        self.model.fit(self.dataset, epochs=self.params["epochs"])
 
-    def load(self, model_name):
-        self.model = tf.keras.models.load_model(f"models/{model_name}/model.h5")
+    def save(self):
+        self.model.save(f"models/{self.name}/model.h5")
+
+    def load(self):
+        self.model = tf.keras.models.load_model(f"models/{self.name}/model.h5")

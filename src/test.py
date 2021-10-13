@@ -20,12 +20,13 @@ def test(model_class, preprocessor_class):
 
     preprocessor = globals()[preprocessor_class]()
     preprocessor.load()
-    X_test = preprocessor.apply_preprocessor(X_test)
 
-    model = globals()[model_class]()
-    model.load(model_class)
+    model = globals()[model_class](
+        train=True, preprocessor=preprocessor, features=X_test, labels=Y_test
+    )
+    model.load()
 
-    Y_test_pred = model.predict(X_test)
+    Y_test_pred = model.predict()
     metrics = {"f1_score": f1_score(y_true=Y_test, y_pred=Y_test_pred)}
 
     with open(f"models/{model_class}/test_metrics.json", "w") as f:

@@ -1,49 +1,42 @@
+vars:
+  - preprocessor: SKCountVectorizer
+  - model_class: SKLogisticRegression
+  - file: model.joblib
+
 stages:
   train:
-    foreach:
-      - preprocessor: SKCountVectorizer
-        model_class: SKLogisticRegression
-        output: model.joblib
-    do:
       wdir: ../../
-      cmd: python src/train.py --model-class=${item.model_class} --preprocessor=${item.preprocessor}
+      cmd: python src/train.py --model-class=${model_class} --preprocessor=${preprocessor}
       deps:
-        - data/prepared/${item.preprocessor}/texts.json
-        - data/prepared/${item.preprocessor}/labels.json
-        - data/prepared/${item.preprocessor}/preproc.joblib
+        - data/prepared/${preprocessor}/texts.json
+        - data/prepared/${preprocessor}/labels.json
+        - data/prepared/${preprocessor}/preproc.joblib
         - src/train.py
+      params:
+        - params.yaml:max_iter
       outs:
-        - models/${item.model_class}/${item.output}
+        - models/${model_class}/${file}
       metrics:
-        - models/${item.model_class}/train_metrics.json:
+        - models/${model_class}/train_metrics.json:
             cache: false
 
   test:
-    foreach:
-      - preprocessor: SKCountVectorizer
-        model_class: SKLogisticRegression
-        file: model.joblib
-    do:
       wdir: ../../
-      cmd: python src/test.py --model-class=${item.model_class} --preprocessor=${item.preprocessor}
+      cmd: python src/test.py --model-class=${model_class} --preprocessor=${preprocessor}
       deps:
-        - models/${item.model_class}/${item.file}
+        - models/${model_class}/${file}
         - src/test.py
       metrics:
-        - models/${item.model_class}/test_metrics.json:
+        - models/${model_class}/test_metrics.json:
             cache: false
 
   predict:
-    foreach:
-      - model_class: SKLogisticRegression
-        file: model.joblib
-    do:
       wdir: ../../
-      cmd: python src/predict.py --model-class=${item.model_class}
+      cmd: python src/predict.py --model-class=${model_class}
       deps:
         - data/raw/test.csv
-        - models/${item.model_class}/test_metrics.json
+        - models/${model_class}/test_metrics.json
         - src/predict.py
-        - models/${item.model_class}/${item.file}
+        - models/${model_class}/${file}
       outs:
-        - data/predictions/${item.model_class}_prediction.csv
+        - data/predictions/${model_class}_prediction.csv
