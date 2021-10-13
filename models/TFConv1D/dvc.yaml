@@ -1,21 +1,17 @@
 stages:
   train:
     foreach:
-      - preprocessor: SKCountVectorizer
-        model_class: SKLogisticRegression
-        output: model.joblib
       - preprocessor: TFTokenizer
         model_class: TFConv1D
         output: model.h5
     do:
-      wdir: ../
+      wdir: ../../
       cmd: python src/train.py --model-class=${item.model_class} --preprocessor=${item.preprocessor}
       deps:
         - data/prepared/${item.preprocessor}/texts.json
         - data/prepared/${item.preprocessor}/labels.json
         - data/prepared/${item.preprocessor}/preproc.joblib
         - src/train.py
-        - models/${item.model_class}/model.py
       outs:
         - models/${item.model_class}/${item.output}
       metrics:
@@ -24,14 +20,11 @@ stages:
 
   test:
     foreach:
-      - preprocessor: SKCountVectorizer
-        model_class: SKLogisticRegression
-        file: model.joblib
       - preprocessor: TFTokenizer
         model_class: TFConv1D
         file: model.h5
     do:
-      wdir: ../
+      wdir: ../../
       cmd: python src/test.py --model-class=${item.model_class} --preprocessor=${item.preprocessor}
       deps:
         - models/${item.model_class}/${item.file}
@@ -42,12 +35,10 @@ stages:
 
   predict:
     foreach:
-      - model_class: SKLogisticRegression
-        file: model.joblib
       - model_class: TFConv1D
         file: model.h5
     do:
-      wdir: ../
+      wdir: ../../
       cmd: python src/predict.py --model-class=${item.model_class}
       deps:
         - data/raw/test.csv

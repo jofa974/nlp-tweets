@@ -1,0 +1,56 @@
+schema: '2.0'
+stages:
+  train@0:
+    cmd: python src/train.py --model-class=TFConv1D --preprocessor=TFTokenizer
+    deps:
+    - path: data/prepared/TFTokenizer/labels.json
+      md5: 9b82a809810ad0411147c95d06a5c946
+      size: 22869
+    - path: data/prepared/TFTokenizer/preproc.joblib
+      md5: 810de9ee4290905b260cc07790f79dd1
+      size: 669288
+    - path: data/prepared/TFTokenizer/texts.json
+      md5: 5afaf5998a346dd53dd6e7fd288c13cb
+      size: 523439
+    - path: src/train.py
+      md5: dc99984fd4fd20069c4c831d7a823188
+      size: 1765
+    outs:
+    - path: models/TFConv1D/model.h5
+      md5: 5b186e27860574c835815510e67edb1d
+      size: 106941072
+    - path: models/TFConv1D/train_metrics.json
+      md5: 8339555778c7fe1766637b98978ec1dd
+      size: 32
+  test@0:
+    cmd: python src/test.py --model-class=TFConv1D --preprocessor=TFTokenizer
+    deps:
+    - path: models/TFConv1D/model.h5
+      md5: 5b186e27860574c835815510e67edb1d
+      size: 106941072
+    - path: src/test.py
+      md5: a9d1f549831c7ccd3ca4e9d9ffd4e0f4
+      size: 1488
+    outs:
+    - path: models/TFConv1D/test_metrics.json
+      md5: c2416183742e2f7f9354acbfb29aaa4d
+      size: 32
+  predict@0:
+    cmd: python src/predict.py --model-class=TFConv1D
+    deps:
+    - path: data/raw/test.csv
+      md5: ff248529f207ea164d73636e5b1b251d
+      size: 420783
+    - path: models/TFConv1D/model.h5
+      md5: 5b186e27860574c835815510e67edb1d
+      size: 106941072
+    - path: models/TFConv1D/test_metrics.json
+      md5: c2416183742e2f7f9354acbfb29aaa4d
+      size: 32
+    - path: src/predict.py
+      md5: dcd79102586cf025166345b58fe5e825
+      size: 605
+    outs:
+    - path: data/predictions/TFConv1D_prediction.csv
+      md5: d41d8cd98f00b204e9800998ecf8427e
+      size: 0

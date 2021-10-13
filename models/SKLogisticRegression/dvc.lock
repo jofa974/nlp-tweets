@@ -1,0 +1,56 @@
+schema: '2.0'
+stages:
+  train@0:
+    cmd: python src/train.py --model-class=SKLogisticRegression --preprocessor=SKCountVectorizer
+    deps:
+    - path: data/prepared/SKCountVectorizer/labels.json
+      md5: 9b82a809810ad0411147c95d06a5c946
+      size: 22869
+    - path: data/prepared/SKCountVectorizer/preproc.joblib
+      md5: 68838f23937d4e1cfc9ff22ef3679c45
+      size: 223216
+    - path: data/prepared/SKCountVectorizer/texts.json
+      md5: 5afaf5998a346dd53dd6e7fd288c13cb
+      size: 523439
+    - path: src/train.py
+      md5: dc99984fd4fd20069c4c831d7a823188
+      size: 1765
+    outs:
+    - path: models/SKLogisticRegression/model.joblib
+      md5: f1d67d4624a479ff353e5b890b99d04d
+      size: 133331
+    - path: models/SKLogisticRegression/train_metrics.json
+      md5: e4a7b101ef7dd0854ddf48e1b783d9db
+      size: 32
+  test@0:
+    cmd: python src/test.py --model-class=SKLogisticRegression --preprocessor=SKCountVectorizer
+    deps:
+    - path: models/SKLogisticRegression/model.joblib
+      md5: f1d67d4624a479ff353e5b890b99d04d
+      size: 133331
+    - path: src/test.py
+      md5: a9d1f549831c7ccd3ca4e9d9ffd4e0f4
+      size: 1488
+    outs:
+    - path: models/SKLogisticRegression/test_metrics.json
+      md5: 74512a3429e4deb6c8e11842a8cbafd6
+      size: 32
+  predict@0:
+    cmd: python src/predict.py --model-class=SKLogisticRegression
+    deps:
+    - path: data/raw/test.csv
+      md5: ff248529f207ea164d73636e5b1b251d
+      size: 420783
+    - path: models/SKLogisticRegression/model.joblib
+      md5: f1d67d4624a479ff353e5b890b99d04d
+      size: 133331
+    - path: models/SKLogisticRegression/test_metrics.json
+      md5: 74512a3429e4deb6c8e11842a8cbafd6
+      size: 32
+    - path: src/predict.py
+      md5: dcd79102586cf025166345b58fe5e825
+      size: 605
+    outs:
+    - path: data/predictions/SKLogisticRegression_prediction.csv
+      md5: d41d8cd98f00b204e9800998ecf8427e
+      size: 0
