@@ -13,7 +13,7 @@ from sklearn.model_selection import train_test_split
 from spacy.lang.en.stop_words import STOP_WORDS
 from tqdm import tqdm
 
-from .logger import logger
+from src.logger import logger
 
 
 class Preprocessor(ABC):

@@ -7,21 +7,21 @@ stages:
       md5: 9b82a809810ad0411147c95d06a5c946
       size: 22869
     - path: data/prepared/TFTokenizer/preproc.joblib
-      md5: 0abbcc3a2583390ab6f363d233c788a7
-      size: 667924
+      md5: 810de9ee4290905b260cc07790f79dd1
+      size: 669288
     - path: data/prepared/TFTokenizer/texts.json
-      md5: 158c1657f6d3f1c0bcc3e69e1b815818
-      size: 523215
+      md5: 5afaf5998a346dd53dd6e7fd288c13cb
+      size: 523439
     - path: models/TFConv1D/model.py
       md5: 41389fad42b57ba2c32816b9bff34768
       size: 24
     - path: src/train.py
-      md5: 077c90b98302a9ab19d51007945c69bd
-      size: 1838
+      md5: dc99984fd4fd20069c4c831d7a823188
+      size: 1765
     outs:
     - path: models/TFConv1D/model.h5
-      md5: f3544438f0e8dd317c39ab53e211811c
-      size: 106744464
+      md5: 85072d161be99971ce3ef41ea66d8bad
+      size: 106941072
     - path: models/TFConv1D/train_metrics.json
       md5: 8339555778c7fe1766637b98978ec1dd
       size: 32
@@ -29,11 +29,11 @@ stages:
     cmd: python src/test.py --model-class=TFConv1D --preprocessor=TFTokenizer
     deps:
     - path: models/TFConv1D/model.h5
-      md5: f3544438f0e8dd317c39ab53e211811c
-      size: 106744464
+      md5: 85072d161be99971ce3ef41ea66d8bad
+      size: 106941072
     - path: src/test.py
-      md5: b3027cde603457c36db20075eab3d34d
-      size: 1561
+      md5: a9d1f549831c7ccd3ca4e9d9ffd4e0f4
+      size: 1488
     outs:
     - path: models/TFConv1D/test_metrics.json
       md5: c2416183742e2f7f9354acbfb29aaa4d
@@ -45,8 +45,8 @@ stages:
       md5: ff248529f207ea164d73636e5b1b251d
       size: 420783
     - path: models/TFConv1D/model.h5
-      md5: f3544438f0e8dd317c39ab53e211811c
-      size: 106744464
+      md5: 85072d161be99971ce3ef41ea66d8bad
+      size: 106941072
     - path: models/TFConv1D/test_metrics.json
       md5: c2416183742e2f7f9354acbfb29aaa4d
       size: 32
@@ -64,36 +64,36 @@ stages:
       md5: 9b82a809810ad0411147c95d06a5c946
       size: 22869
     - path: data/prepared/SKCountVectorizer/preproc.joblib
-      md5: 9db0cdb0d67e5856d15b7c3154e54143
-      size: 222716
+      md5: 68838f23937d4e1cfc9ff22ef3679c45
+      size: 223216
     - path: data/prepared/SKCountVectorizer/texts.json
-      md5: 158c1657f6d3f1c0bcc3e69e1b815818
-      size: 523215
+      md5: 5afaf5998a346dd53dd6e7fd288c13cb
+      size: 523439
     - path: models/SKLogisticRegression/model.py
       md5: 41389fad42b57ba2c32816b9bff34768
       size: 24
     - path: src/train.py
-      md5: 077c90b98302a9ab19d51007945c69bd
-      size: 1838
+      md5: dc99984fd4fd20069c4c831d7a823188
+      size: 1765
     outs:
     - path: models/SKLogisticRegression/model.joblib
-      md5: 1112172fd2e9b9f332fd3d7720a2c2d8
-      size: 133075
+      md5: f1d67d4624a479ff353e5b890b99d04d
+      size: 133331
     - path: models/SKLogisticRegression/train_metrics.json
-      md5: 4e6f8bfa366b18e95875ace31f754e1f
+      md5: e4a7b101ef7dd0854ddf48e1b783d9db
       size: 32
   test@0:
     cmd: python src/test.py --model-class=SKLogisticRegression --preprocessor=SKCountVectorizer
     deps:
     - path: models/SKLogisticRegression/model.joblib
-      md5: 1112172fd2e9b9f332fd3d7720a2c2d8
-      size: 133075
+      md5: f1d67d4624a479ff353e5b890b99d04d
+      size: 133331
     - path: src/test.py
-      md5: b3027cde603457c36db20075eab3d34d
-      size: 1561
+      md5: a9d1f549831c7ccd3ca4e9d9ffd4e0f4
+      size: 1488
     outs:
     - path: models/SKLogisticRegression/test_metrics.json
-      md5: 7b699292dba529242bd5ea2a55fb8602
+      md5: 74512a3429e4deb6c8e11842a8cbafd6
       size: 32
   predict@0:
     cmd: python src/predict.py --model-class=SKLogisticRegression
@@ -102,10 +102,10 @@ stages:
       md5: ff248529f207ea164d73636e5b1b251d
       size: 420783
     - path: models/SKLogisticRegression/model.joblib
-      md5: 1112172fd2e9b9f332fd3d7720a2c2d8
-      size: 133075
+      md5: f1d67d4624a479ff353e5b890b99d04d
+      size: 133331
     - path: models/SKLogisticRegression/test_metrics.json
-      md5: 7b699292dba529242bd5ea2a55fb8602
+      md5: 74512a3429e4deb6c8e11842a8cbafd6
       size: 32
     - path: src/predict.py
       md5: dcd79102586cf025166345b58fe5e825

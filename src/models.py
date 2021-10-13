@@ -2,7 +2,7 @@ import joblib
 import tensorflow as tf
 from sklearn.linear_model import LogisticRegression
 
-from logger import logger
+from src.logger import logger
 
 
 class SKLogisticRegression:

@@ -7,6 +7,7 @@ from sklearn.metrics import f1_score
 from constants import PARAMS
 from models import SKLogisticRegression, TFConv1D
 from prepare import SKCountVectorizer, TFTokenizer
+from src.logger import logger
 
 
 def train(model_class, preprocessor_class):
@@ -43,11 +44,7 @@ def train(model_class, preprocessor_class):
 
 
 if __name__ == "__main__":
-    from logger import setup_applevel_logger
-
-    log = setup_applevel_logger(file_name="app_debug.log")
-
-    log.info("I am training !")
+    logger.info("I am training !")
 
     parser = argparse.ArgumentParser(description="Train model")
     parser.add_argument(

@@ -6,6 +6,7 @@ from sklearn.metrics import f1_score
 
 from models import SKLogisticRegression, TFConv1D
 from prepare import SKCountVectorizer, TFTokenizer
+from src.logger import logger
 
 
 def test(model_class, preprocessor_class):
@@ -32,11 +33,7 @@ def test(model_class, preprocessor_class):
 
 
 if __name__ == "__main__":
-    from logger import setup_applevel_logger
-
-    log = setup_applevel_logger(file_name="app_debug.log")
-
-    log.info("I am testing !")
+    logger.info("I am testing !")
     parser = argparse.ArgumentParser(description="Test model")
     parser.add_argument(
         "--model-class",
