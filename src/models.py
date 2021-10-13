@@ -38,9 +38,8 @@ class CustomModel:
         raise NotImplementedError
 
     def get_params(self):
-        module_path = Path(__file__).parent.resolve()
-        with open(module_path / f"../models/{self.name}/params.yaml", "r") as f:
-            self.params = yaml.safe_load(f)
+        with open("params.yaml", "r") as f:
+            self.params = yaml.safe_load(f)[self.name]
 
 
 class SKLogisticRegression(CustomModel):

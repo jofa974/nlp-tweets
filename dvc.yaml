@@ -8,15 +8,14 @@ stages:
         model_class: TFConv1D
         output: model.h5
     do:
-      wdir: ../
-      cmd: python src/train.py --model-class=${item.model_class} --preprocessor=${item.preprocessor} --params=models/${item.model_class}/params.yaml
+      cmd: python src/train.py --model-class=${item.model_class} --preprocessor=${item.preprocessor}
       deps:
         - data/prepared/${item.preprocessor}/texts.json
         - data/prepared/${item.preprocessor}/labels.json
         - data/prepared/${item.preprocessor}/preproc.joblib
         - src/train.py
       params:
-        - models/${item.model_class}/params.yaml
+        - ${item.model_class}
       outs:
         - models/${item.model_class}/${item.output}
       metrics:
@@ -32,7 +31,6 @@ stages:
         model_class: TFConv1D
         file: model.h5
     do:
-      wdir: ../
       cmd: python src/test.py --model-class=${item.model_class} --preprocessor=${item.preprocessor}
       deps:
         - models/${item.model_class}/${item.file}
@@ -48,7 +46,6 @@ stages:
       - model_class: TFConv1D
         file: model.h5
     do:
-      wdir: ../
       cmd: python src/predict.py --model-class=${item.model_class}
       deps:
         - data/raw/test.csv
