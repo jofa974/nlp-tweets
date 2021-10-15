@@ -72,17 +72,6 @@ class Preprocessor(ABC):
         )
         return lemma
 
-    def prepare(self):
-
-        logger.info("I am preparing the data !")
-
-        # self.clean_text()
-        # self.tts()
-        # self.make_preprocessor()
-        # self.save()
-
-        logger.info("Done.")
-
     @property
     @abstractmethod
     def vocab_size(self):
@@ -93,10 +82,10 @@ class TFTokenizer(Preprocessor):
     def __init__(self):
         super(TFTokenizer, self).__init__()
 
-    def fit(self):
+    def fit(self, texts):
         logger.info("Tokenizing...")
         self.preprocessor = tf.keras.preprocessing.text.Tokenizer()
-        self.preprocessor.fit_on_texts(self.df["text_clean"])
+        self.preprocessor.fit_on_texts(texts)
 
     def apply(self, texts):
         processed_text = self.preprocessor.texts_to_sequences(texts)
@@ -129,6 +118,9 @@ class SKCountVectorizer(Preprocessor):
 
 
 if __name__ == "__main__":
+
+    logger.info("I am preparing the data !")
+
     parser = argparse.ArgumentParser(description="Prepare data")
     parser.add_argument(
         "--preprocessor",
@@ -149,3 +141,5 @@ if __name__ == "__main__":
 
     preprocessor.fit(ds._features)
     preprocessor.save()
+
+    logger.info("Done.")

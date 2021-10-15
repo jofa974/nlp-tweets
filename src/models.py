@@ -9,27 +9,21 @@ from src.logger import logger
 
 
 class CustomModel:
-    def __init__(self, train=True, preprocessor=None, features=[], labels=[]):
+    def __init__(self, train=True, dataset=None):
         self.model = None
         self.train = train
-        self.preprocessor = preprocessor
-        self.features = self.preprocessor.apply_preprocessor(features)
-        self.labels = labels
+        self.dataset = dataset
         self.name = self.__class__.__name__
         self.get_params()
-        self.make_dataset()
 
-    def make_dataset(self):
-        self.dataset = (self.features, self.labels)
-
-    def make_model(self):
-        self.model = LogisticRegression(max_iter=100)
+    def make_model(self, vocab_size=0):
+        raise NotImplementedError
 
     def fit(self):
-        self.model.fit(*self.dataset)
+        raise NotImplementedError
 
     def predict(self):
-        return self.model.predict(self.features)
+        return self.model.predict(self.dataset._features)
 
     def save(self):
         raise NotImplementedError
@@ -43,16 +37,17 @@ class CustomModel:
 
 
 class SKLogisticRegression(CustomModel):
-    def __init__(self, train=True, preprocessor=None, features=[], labels=[]):
+    def __init__(self, train=True, dataset=None):
         super(SKLogisticRegression, self).__init__(
             train=train,
-            preprocessor=preprocessor,
-            features=features,
-            labels=labels,
+            dataset=dataset,
         )
 
-    def make_model(self):
+    def make_model(self, vocab_size=0):
         self.model = LogisticRegression(max_iter=100)
+
+    def fit(self):
+        self.model.fit(self.dataset._features, self.dataset._labels)
 
     def save(self):
         joblib.dump(self.model, f"models/{self.name}/model.joblib")
@@ -62,16 +57,14 @@ class SKLogisticRegression(CustomModel):
 
 
 class TFConv1D(CustomModel):
-    def __init__(self, train=True, preprocessor=None, features=[], labels=[]):
+    def __init__(self, train=True, dataset=None):
         super(TFConv1D, self).__init__(
             train=train,
-            preprocessor=preprocessor,
-            features=features,
-            labels=labels,
+            dataset=dataset,
         )
 
-    def make_model(self):
-        vocab_size = self.preprocessor.vocab_size
+    def make_model(self, vocab_size=0):
+        input_shape = self.dataset.input_shape
         self.model = tf.keras.Sequential(
             [
                 # Layer Input Word Embedding
@@ -79,7 +72,7 @@ class TFConv1D(CustomModel):
                     vocab_size + 1,
                     output_dim=512,
                     input_shape=[
-                        self.input_shape,
+                        input_shape,
                     ],
                 ),
                 tf.keras.layers.Conv1D(128, 3, activation="relu"),
@@ -100,17 +93,10 @@ class TFConv1D(CustomModel):
             metrics=["accuracy"],
         )
 
-    def make_dataset(self):
-        self.input_shape = self.features.shape[1]
-
-        buffer_size = 100000
-        self.dataset = tf.data.Dataset.from_tensor_slices((self.features, self.labels))
-        self.dataset = self.dataset.shuffle(buffer_size)
-        self.dataset = self.dataset.batch(self.params["batch_size"])
-
     # TODO: validation data via a dataset class
     def fit(self, validation_data=None):
-        self.model.fit(self.dataset, epochs=self.params["epochs"])
+        batched_data = self.dataset.make_tf_batched_data(self.params["batch_size"])
+        self.model.fit(batched_data, epochs=self.params["epochs"])
 
     def save(self):
         self.model.save(f"models/{self.name}/model.h5")

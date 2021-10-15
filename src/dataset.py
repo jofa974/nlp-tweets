@@ -1,6 +1,7 @@
 import json
 
 import pandas as pd
+import tensorflow as tf
 from sklearn.model_selection import train_test_split
 from tqdm import tqdm
 
@@ -58,3 +59,16 @@ class Dataset:
     def load_labels(self, dir_path):
         with open(dir_path / "labels.json", "r") as f:
             self._labels = json.load(f)["train"]
+
+    @property
+    def input_shape(self):
+        return self._features.shape[1]
+
+    def make_tf_batched_data(self, batch_size):
+        buffer_size = 100000
+        batched_data = tf.data.Dataset.from_tensor_slices(
+            (self._features, self._labels)
+        )
+        batched_data = batched_data.shuffle(buffer_size)
+        batched_data = batched_data.batch(batch_size)
+        return batched_data
