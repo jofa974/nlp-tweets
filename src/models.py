@@ -5,8 +5,6 @@ import tensorflow as tf
 import yaml
 from sklearn.linear_model import LogisticRegression
 
-from src.logger import logger
-
 
 class CustomModel:
     def __init__(self, dataset=None):
@@ -22,7 +20,9 @@ class CustomModel:
         raise NotImplementedError
 
     def predict(self):
-        return self.model.predict(self.dataset._features)
+        predictions = self.model.predict(self.dataset._features)
+        threshold = 0.5
+        return list(map((lambda x: 1 if x > threshold else 0), predictions))
 
     def save(self):
         raise NotImplementedError
@@ -62,26 +62,13 @@ class TFConv1D(CustomModel):
 
     def make_model(self, vocab_size=0):
         input_shape = self.dataset.input_shape
-        self.model = tf.keras.Sequential(
+        self.model = tf.keras.models.Sequential(
             [
-                # Layer Input Word Embedding
-                tf.keras.layers.Embedding(
-                    vocab_size + 1,
-                    output_dim=512,
-                    input_shape=[
-                        input_shape,
-                    ],
+                tf.keras.layers.Dense(
+                    64, activation="relu", input_shape=(input_shape,)
                 ),
-                tf.keras.layers.Conv1D(128, 3, activation="relu"),
-                # Flatten
-                tf.keras.layers.Flatten(),
-                # Layer Dense classique
                 tf.keras.layers.Dense(64, activation="relu"),
-                tf.keras.layers.Dropout(0.2),
-                tf.keras.layers.Dense(32, activation="relu"),
-                tf.keras.layers.Dropout(0.2),
-                # Output layer with number of output neurons equal to class number with softmax function
-                tf.keras.layers.Dense(1, activation="softmax"),
+                tf.keras.layers.Dense(1, activation="sigmoid"),
             ]
         )
         self.model.compile(
