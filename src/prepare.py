@@ -11,7 +11,6 @@ import tensorflow as tf
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.model_selection import train_test_split
 from spacy.lang.en.stop_words import STOP_WORDS
-from tqdm import tqdm
 
 from src.logger import logger
 
@@ -21,6 +20,7 @@ class Preprocessor(ABC):
         self.preprocessor = None
         self.out_path = Path("data/prepared") / self.__class__.__name__
         self.out_path.mkdir(parents=True, exist_ok=True)
+        self.nlp = spacy.load("en_core_web_sm")
 
     @abstractmethod
     def make_preprocessor(self, texts):
@@ -38,7 +38,6 @@ class Preprocessor(ABC):
 
     @staticmethod
     def remove_url(text):
-
         """Remove url substrings that will hinder the model:
 
         Parameters
@@ -53,22 +52,25 @@ class Preprocessor(ABC):
         """
         return re.sub(r"https?://\S+", "", text)
 
-    def lemmatize_text(self, nlp, text):
+    def lemmatize(self, text):
+        """Transform text string to string of lemmas using spacy.
+
+        Parameters
+        ----------
+        text: str
+            A string to be processed.
+
+        Returns
+        -------
+        str:
+            The string of lemmas.
+        """
         text = "".join(ch for ch in text if ch.isalnum() or ch == " ")
-        text = nlp(text)
+        text = self.nlp(text)
         lemma = " ".join(
             [token.lemma_ for token in text if token.text not in STOP_WORDS]
         )
         return lemma
-
-    def clean_text(self, text):
-        text_clean = text.progress_apply(self.remove_url)
-
-        nlp = spacy.load("en_core_web_sm")
-        df["text_clean"] = df["text_clean"].progress_apply(
-            lambda x: self.lemmatize_text(nlp, x)
-        )
-        self.df = df
 
     def tts(self, save=True):
         self.X_train, self.X_test, self.Y_train, self.Y_test = train_test_split(
@@ -103,12 +105,10 @@ class Preprocessor(ABC):
 
         logger.info("I am preparing the data !")
 
-        tqdm.pandas()
-
-        self.clean_text()
-        self.tts()
-        self.make_preprocessor()
-        self.save()
+        # self.clean_text()
+        # self.tts()
+        # self.make_preprocessor()
+        # self.save()
 
         logger.info("Done.")
 
