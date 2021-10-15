@@ -18,8 +18,8 @@ def train(model_class, preprocessor_class):
 
     data_path = Path(f"data/prepared/{preprocessor_class}")
     ds = Dataset()
-    ds.load_features(data_path)
-    ds.load_labels(data_path)
+    ds.load_features(data_path, stage="train")
+    ds.load_labels(data_path, stage="train")
 
     ds._features = preprocessor.apply(ds._features)
 

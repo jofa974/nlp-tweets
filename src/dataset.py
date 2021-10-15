@@ -51,14 +51,14 @@ class Dataset:
         with open(out_path / "labels.json", "w") as f:
             json.dump(labels, f)
 
-    def load_features(self, dir_path):
+    def load_features(self, dir_path, stage="train"):
         # out_path = Path(f"data/prepared/{preprocessor_class}")
         with open(dir_path / "texts.json", "r") as f:
-            self._features = json.load(f)["train"]
+            self._features = json.load(f)[stage]
 
-    def load_labels(self, dir_path):
+    def load_labels(self, dir_path, stage="train"):
         with open(dir_path / "labels.json", "r") as f:
-            self._labels = json.load(f)["train"]
+            self._labels = json.load(f)[stage]
 
     @property
     def input_shape(self):
