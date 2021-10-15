@@ -1,87 +1,145 @@
+import argparse
 import json
 import re
+from abc import ABC, abstractmethod, abstractproperty
 from pathlib import Path
 
 import joblib
-import numpy as np
 import pandas as pd
 import spacy
+import tensorflow as tf
 from sklearn.feature_extraction.text import CountVectorizer
-from sklearn.model_selection import train_test_split
 from spacy.lang.en.stop_words import STOP_WORDS
-from tqdm import tqdm
+
+from src.dataset import Dataset
+from src.logger import logger
 
 
-def cleanup(text):
+class Preprocessor(ABC):
+    def __init__(self):
+        self.preprocessor = None
+        self.out_path = Path("data/prepared") / self.__class__.__name__
+        self.out_path.mkdir(parents=True, exist_ok=True)
+        self.nlp = spacy.load("en_core_web_sm")
 
-    """Remove substrings that will hinder the model:
-    - urls
-    - ??
+    @abstractmethod
+    def fit(self, texts):
+        pass
 
-    Parameters
-    ----------
-    text: str
-        A string to be processed.
+    @abstractmethod
+    def apply(self, texts):
+        pass
 
-    Returns
-    -------
-    str:
-        The cleaned up string.
-    """
-    return re.sub(r"https?://\S+", "", text)
+    def save(self):
+        joblib.dump(self.preprocessor, self.out_path / "preproc.joblib")
+
+    def load(self):
+        self.preprocessor = joblib.load(self.out_path / "preproc.joblib")
+
+    @staticmethod
+    def remove_url(text):
+        """Remove url substrings that will hinder the model:
+
+        Parameters
+        ----------
+        text: str
+            A string to be processed.
+
+        Returns
+        -------
+        str:
+            The string without urls.
+        """
+        return re.sub(r"https?://\S+", "", text)
+
+    def lemmatize(self, text):
+        """Transform text string to string of lemmas using spacy.
+
+        Parameters
+        ----------
+        text: str
+            A string to be processed.
+
+        Returns
+        -------
+        str:
+            The string of lemmas.
+        """
+        text = "".join(ch for ch in text if ch.isalnum() or ch == " ")
+        text = self.nlp(text)
+        lemma = " ".join(
+            [token.lemma_ for token in text if token.text not in STOP_WORDS]
+        )
+        return lemma
+
+    @property
+    @abstractmethod
+    def vocab_size(self):
+        pass
 
 
-def lemmatize_text(nlp, text):
-    text = "".join(ch for ch in text if ch.isalnum() or ch == " ")
-    text = nlp(text)
-    lemma = " ".join([token.lemma_ for token in text if token.text not in STOP_WORDS])
-    return lemma
+class TFTokenizer(Preprocessor):
+    def __init__(self):
+        super(TFTokenizer, self).__init__()
+
+    def fit(self, texts):
+        logger.info("Tokenizing...")
+        self.preprocessor = tf.keras.preprocessing.text.Tokenizer()
+        self.preprocessor.fit_on_texts(texts)
+
+    def apply(self, texts):
+        processed_text = self.preprocessor.texts_to_sequences(texts)
+        processed_text = tf.keras.preprocessing.sequence.pad_sequences(
+            processed_text, padding="post"
+        )
+        return processed_text
+
+    @property
+    def vocab_size(self):
+        return len(self.preprocessor.word_index)
 
 
-def prepare():
+class SKCountVectorizer(Preprocessor):
+    def __init__(self):
+        super(SKCountVectorizer, self).__init__()
 
-    log.info("I am preparing the data !")
+    def fit(self, texts):
+        logger.info("Vectorizing...")
+        self.preprocessor = CountVectorizer()
+        self.preprocessor.fit(texts)
 
-    tqdm.pandas()
+    def apply(self, texts):
+        processed_text = self.preprocessor.transform(texts)
+        return processed_text
 
-    df = pd.read_csv("data/raw/train.csv")
-    df["text_clean"] = df["text"].progress_apply(cleanup)
-
-    nlp = spacy.load("en_core_web_sm")
-    df["text_clean"] = df["text_clean"].progress_apply(lambda x: lemmatize_text(nlp, x))
-
-    X_train, X_test, Y_train, Y_test = train_test_split(
-        df["text_clean"].values, df["target"].values, test_size=0.2, random_state=42
-    )
-    X_train, X_val, Y_train, Y_val = train_test_split(
-        X_train, Y_train, test_size=0.2, random_state=42
-    )
-
-    log.info("Vectorizing...")
-    vectorizer = CountVectorizer(stop_words="english")
-    vectorizer.fit(X_train)
-
-    out_path = Path("data/prepared")
-    out_path.mkdir(parents=True, exist_ok=True)
-
-    joblib.dump(vectorizer, out_path / "vectorizer.joblib")
-
-    log.info("Saving texts...")
-    texts = {"train": X_train.tolist(), "val": X_val.tolist(), "test": X_test.tolist()}
-    with open(out_path / "texts.json", "w") as f:
-        json.dump(texts, f)
-
-    log.info("Saving labels...")
-    labels = {"train": Y_train.tolist(), "val": Y_val.tolist(), "test": Y_test.tolist()}
-    with open(out_path / "labels.json", "w") as f:
-        json.dump(labels, f)
-
-    log.info("Done.")
+    @property
+    def vocab_size(self):
+        return len(self.preprocessor.vocabulary_)
 
 
 if __name__ == "__main__":
-    from logger import setup_applevel_logger
 
-    log = setup_applevel_logger(file_name="app_debug.log")
+    logger.info("I am preparing the data !")
 
-    prepare()
+    parser = argparse.ArgumentParser(description="Prepare data")
+    parser.add_argument(
+        "--preprocessor",
+        type=str,
+        default="SKCountVectorizer",
+        help="A preprocessor's name. Must be a sub-class of Preprocessor",
+    )
+    args = parser.parse_args()
+    # TODO: use factory
+    constructors = {"SKCountVectorizer": SKCountVectorizer, "TFTokenizer": TFTokenizer}
+
+    ds = Dataset()
+    ds.load_raw_to_df(raw_file="data/raw/train.csv")
+
+    preprocessor = constructors[args.preprocessor]()
+    ds.prepare_features(preprocessor)
+    ds.train_test_split(save_path=Path("data/prepared") / args.preprocessor)
+
+    preprocessor.fit(ds._features)
+    preprocessor.save()
+
+    logger.info("Done.")

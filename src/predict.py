@@ -2,24 +2,24 @@ import argparse
 from pathlib import Path
 
 
-def predict(model_name):
+def predict(model_class):
 
     out_path = Path("data/predictions")
     out_path.mkdir(parents=True, exist_ok=True)
 
-    open(out_path / f"{model_name}_prediction.csv", "w").write("")
+    open(out_path / f"{model_class}_prediction.csv", "w").write("")
 
 
 if __name__ == "__main__":
     print("I am making prediction !")
 
-    parser = argparse.ArgumentParser(description="Train model")
+    parser = argparse.ArgumentParser(description="Prediction")
     parser.add_argument(
-        "--model-name",
+        "--model-class",
         type=str,
-        default="LogisticRegression",
-        help="A model name. Must be a class registered in src/models.py:factory",
+        default="SKLogisticRegression",
+        help="A model class. Must be implemented in a model.py file.",
     )
 
     args = parser.parse_args()
-    predict(args.model_name)
+    predict(args.model_class)

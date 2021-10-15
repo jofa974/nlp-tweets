@@ -1,47 +1,52 @@
 import argparse
-import joblib
 import json
-
-import numpy as np
-from sklearn.metrics import f1_score
-
 from pathlib import Path
 
+from sklearn.metrics import f1_score
 
-def test(model_name):
+from models import SKLogisticRegression, TFConv1D
+from prepare import SKCountVectorizer, TFTokenizer
+from src.dataset import Dataset
+from src.logger import logger
 
-    out_path = Path("data/prepared")
-    with open(out_path / "texts.json", "r") as f:
-        X_test = json.load(f)["test"]
 
-    with open(out_path / "labels.json", "r") as f:
-        Y_test = json.load(f)["test"]
+def test(model_class, preprocessor_class):
 
-    vectorizer = joblib.load(out_path / "vectorizer.joblib")
-    X_test = vectorizer.transform(X_test).toarray()
+    preprocessor = globals()[preprocessor_class]()
+    preprocessor.load()
 
-    model = joblib.load(f"models/{model_name}.joblib")
+    data_path = Path(f"data/prepared/{preprocessor_class}")
+    ds = Dataset()
+    ds.load_features(data_path, stage="test")
+    ds.load_labels(data_path, stage="test")
 
-    Y_test_pred = model.predict(X_test)
-    metrics = {"f1_score": f1_score(y_true=Y_test, y_pred=Y_test_pred)}
+    ds._features = preprocessor.apply(ds._features)
 
-    with open(f"models/{model_name}_test_metrics.json", "w") as f:
+    model = globals()[model_class](dataset=ds)
+    model.load()
+
+    Y_test_pred = model.predict()
+    metrics = {"f1_score": f1_score(y_true=ds._labels, y_pred=Y_test_pred)}
+
+    with open(f"models/{model_class}/test_metrics.json", "w") as f:
         json.dump(metrics, f)
 
 
 if __name__ == "__main__":
-    from logger import setup_applevel_logger
-
-    log = setup_applevel_logger(file_name="app_debug.log")
-
-    log.info("I am testing !")
-    parser = argparse.ArgumentParser(description="Train model")
+    logger.info("I am testing !")
+    parser = argparse.ArgumentParser(description="Test model")
     parser.add_argument(
-        "--model-name",
+        "--model-class",
         type=str,
-        default="LogisticRegression",
-        help="A model name. Must be a class registered in src/models.py:factory",
+        default="SKLogisticRegression",
+        help="A model class. Must be implemented in a model.py file.",
+    )
+    parser.add_argument(
+        "--preprocessor",
+        type=str,
+        default="SKCountVectorizer",
+        help="A preprocessor class. Must be a sub-class of Preprocessor",
     )
 
     args = parser.parse_args()
-    test(args.model_name)
+    test(args.model_class, args.preprocessor)

@@ -1,0 +1,15 @@
+stages:
+  prepare_data:
+    foreach:
+      - SKCountVectorizer
+      - TFTokenizer
+    do:
+      wdir: ../
+      cmd: python src/prepare.py --preprocessor=${item}
+      deps:
+        - data/raw/train.csv
+        - src/prepare.py
+      outs:
+        - data/prepared/${item}/texts.json
+        - data/prepared/${item}/labels.json
+        - data/prepared/${item}/preproc.joblib

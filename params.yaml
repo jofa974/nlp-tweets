@@ -1,8 +1,7 @@
-prepare:
-  test_split_size: 0.2
-
-models:
-  LogisticRegression:
-    name: LogisticRegression
-    kwargs:
-      max_iter: 100
+SKLogisticRegression:
+  max_iter: 1000
+  
+TFConv1D:
+  lr: 0.001
+  batch_size: 64
+  epochs: 50

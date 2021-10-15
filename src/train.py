@@ -1,52 +1,60 @@
 import argparse
 import json
-
-import joblib
-import numpy as np
-from sklearn.metrics import f1_score
 from pathlib import Path
-from models import factory
-from constants import PARAMS
+
+import yaml
+from sklearn.metrics import f1_score
+from sklearn.utils import validation
+
+from models import SKLogisticRegression, TFConv1D
+from prepare import SKCountVectorizer, TFTokenizer
+from src.dataset import Dataset
+from src.logger import logger
 
 
-def train(model_name):
+def train(model_class, preprocessor_class):
 
-    out_path = Path("data/prepared")
-    with open(out_path / "texts.json", "r") as f:
-        X_train = json.load(f)["train"]
+    preprocessor = globals()[preprocessor_class]()
+    preprocessor.load()
 
-    with open(out_path / "labels.json", "r") as f:
-        Y_train = json.load(f)["train"]
+    data_path = Path(f"data/prepared/{preprocessor_class}")
+    ds = Dataset()
+    ds.load_features(data_path, stage="train")
+    ds.load_labels(data_path, stage="train")
 
-    vectorizer = joblib.load(out_path / "vectorizer.joblib")
-    X_train = vectorizer.transform(X_train).toarray()
+    ds._features = preprocessor.apply(ds._features)
 
-    model = factory.create(model_name, **PARAMS["models"][model_name]["kwargs"])
-    model.fit(X_train, Y_train)
+    _, val_ds = ds.train_test_split()
 
-    Y_train_pred = model.predict(X_train)
-    metrics = {"f1_score": f1_score(y_true=Y_train, y_pred=Y_train_pred)}
+    model = globals()[model_class](dataset=ds)
+    model.make_model(vocab_size=preprocessor.vocab_size)
+    model.fit(validation_data=val_ds)
 
-    with open(f"models/{model_name}_train_metrics.json", "w") as f:
+    Y_train_pred = model.predict()
+    metrics = {"f1_score": f1_score(y_true=ds._labels, y_pred=Y_train_pred)}
+
+    with open(f"models/{model_class}/train_metrics.json", "w") as f:
         json.dump(metrics, f)
 
-    joblib.dump(model, f"models/{model_name}.joblib")
+    model.save()
 
 
 if __name__ == "__main__":
-    from logger import setup_applevel_logger
-
-    log = setup_applevel_logger(file_name="app_debug.log")
-
-    log.info("I am training !")
+    logger.info("I am training !")
 
     parser = argparse.ArgumentParser(description="Train model")
     parser.add_argument(
-        "--model-name",
+        "--model-class",
         type=str,
-        default="LogisticRegression",
-        help="A model name. Must be a class registered in src/models.py:factory",
+        default="SKLogisticRegression",
+        help="A model class. Must be implemented in a model.py file.",
+    )
+    parser.add_argument(
+        "--preprocessor",
+        type=str,
+        default="SKCountVectorizer",
+        help="A preprocessor class. Must be a sub-class of Preprocessor.",
     )
 
     args = parser.parse_args()
-    train(args.model_name)
+    train(args.model_class, args.preprocessor)

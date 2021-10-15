@@ -13,6 +13,7 @@ jobs:
         run: |
           # Install requirements
           pip install -r requirements.txt
+          pip install -e .
           
           # Pull data & run-cache from gdrive and reproduce pipeline
           dvc pull data/raw --run-cache

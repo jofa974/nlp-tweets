@@ -1,5 +1,5 @@
-/test_metrics.json
-/${item.name}.pickle
-/train_metrics.json
-/${item.name}.joblib
-/LogisticRegression.joblib
+*joblib
+*h5
+assets
+variables
+*.pb

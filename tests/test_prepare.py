@@ -1,9 +1,13 @@
-from src.prepare import cleanup
+from src.prepare import Preprocessor
 
 
 def test_cleanup():
+    pass
+
+
+def test_remove_url():
     text = "'By accident' they knew what was gon happen https://t.co/Ysxun5vCeh"
-    result = cleanup(text)
+    result = Preprocessor.remove_url(text)
     expected = "'By accident' they knew what was gon happen "
 
     assert result == expected

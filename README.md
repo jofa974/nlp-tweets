@@ -18,9 +18,8 @@ This repo is used to practice the developement of ML models for NLP and building
 The data preprocessing will constitute an important part of the development. The following approaches will be successively implemented:
 
 - CountVectorizer from sklearn
-- Spacy embedding
-- Embedding layer (for NN)
-
+- TfidfVectorizer from sklearn
+- TFTokenizer from tensorflow
 ### Model
 
 Classical ML and deep learning models will be investigated:
