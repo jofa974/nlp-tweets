@@ -7,14 +7,17 @@ stages:
       md5: 76e06f8528ff37525b0f13d4dc8d6d0e
       size: 22860
     - path: data/prepared/SKCountVectorizer/preproc.joblib
-      md5: 6d50583190c3dd8189c6be7168ae3b68
+      md5: 59c04bf1840d82488ba8f86ce3dd8f66
       size: 223216
     - path: data/prepared/SKCountVectorizer/texts.json
       md5: 991dfd263b8f099134356763e119a105
       size: 523430
+    - path: src/dataset.py
+      md5: f72661f935c6189ceb5c1a6406c0d108
+      size: 2656
     - path: src/train.py
-      md5: 89cc2f7200d8bc4e28a9f32449d71f75
-      size: 1546
+      md5: 3d868b67af48a5532beeed7088c2f7b0
+      size: 1644
     params:
       params.yaml:
         SKLogisticRegression:
@@ -65,14 +68,17 @@ stages:
       md5: 76e06f8528ff37525b0f13d4dc8d6d0e
       size: 22860
     - path: data/prepared/TFTokenizer/preproc.joblib
-      md5: 3612d903598aa900aa508066c891a93b
+      md5: 3498c950eebb674134c0fdd6da2af476
       size: 669288
     - path: data/prepared/TFTokenizer/texts.json
       md5: 991dfd263b8f099134356763e119a105
       size: 523430
+    - path: src/dataset.py
+      md5: f72661f935c6189ceb5c1a6406c0d108
+      size: 2656
     - path: src/train.py
-      md5: 89cc2f7200d8bc4e28a9f32449d71f75
-      size: 1546
+      md5: 3d868b67af48a5532beeed7088c2f7b0
+      size: 1644
     params:
       params.yaml:
         TFConv1D:
@@ -81,7 +87,7 @@ stages:
           epochs: 10
     outs:
     - path: models/TFConv1D/model.h5
-      md5: 756c549521af2411b39ac7d8582baf50
+      md5: 93bac8bc55e1fa13e3e64d499a83ad75
       size: 106941072
     - path: models/TFConv1D/train_metrics.json
       md5: d217aa16aae9a93b654d1ef21e4250ad
@@ -90,7 +96,7 @@ stages:
     cmd: python src/test.py --model-class=TFConv1D --preprocessor=TFTokenizer
     deps:
     - path: models/TFConv1D/model.h5
-      md5: 756c549521af2411b39ac7d8582baf50
+      md5: 93bac8bc55e1fa13e3e64d499a83ad75
       size: 106941072
     - path: src/test.py
       md5: efe0a47194b17e8551ab2ff48e3deac1
@@ -106,7 +112,7 @@ stages:
       md5: ff248529f207ea164d73636e5b1b251d
       size: 420783
     - path: models/TFConv1D/model.h5
-      md5: 756c549521af2411b39ac7d8582baf50
+      md5: 93bac8bc55e1fa13e3e64d499a83ad75
       size: 106941072
     - path: models/TFConv1D/test_metrics.json
       md5: c2416183742e2f7f9354acbfb29aaa4d

@@ -137,7 +137,7 @@ if __name__ == "__main__":
 
     preprocessor = constructors[args.preprocessor]()
     ds.prepare_features(preprocessor)
-    ds.train_test_split(out_path=Path("data/prepared") / args.preprocessor)
+    ds.train_test_split(save_path=Path("data/prepared") / args.preprocessor)
 
     preprocessor.fit(ds._features)
     preprocessor.save()

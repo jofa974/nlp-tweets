@@ -4,6 +4,7 @@ from pathlib import Path
 
 import yaml
 from sklearn.metrics import f1_score
+from sklearn.utils import validation
 
 from models import SKLogisticRegression, TFConv1D
 from prepare import SKCountVectorizer, TFTokenizer
@@ -23,9 +24,11 @@ def train(model_class, preprocessor_class):
 
     ds._features = preprocessor.apply(ds._features)
 
+    _, val_ds = ds.train_test_split()
+
     model = globals()[model_class](dataset=ds)
     model.make_model(vocab_size=preprocessor.vocab_size)
-    model.fit()
+    model.fit(validation_data=val_ds)
 
     Y_train_pred = model.predict()
     metrics = {"f1_score": f1_score(y_true=ds._labels, y_pred=Y_train_pred)}

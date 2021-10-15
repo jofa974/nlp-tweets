@@ -18,7 +18,7 @@ class CustomModel:
     def make_model(self, vocab_size=0):
         raise NotImplementedError
 
-    def fit(self):
+    def fit(self, validation_data=None):
         raise NotImplementedError
 
     def predict(self):
@@ -44,7 +44,7 @@ class SKLogisticRegression(CustomModel):
     def make_model(self, vocab_size=0):
         self.model = LogisticRegression(max_iter=100)
 
-    def fit(self):
+    def fit(self, validation_data=None):
         self.model.fit(self.dataset._features, self.dataset._labels)
 
     def save(self):
@@ -90,10 +90,17 @@ class TFConv1D(CustomModel):
             metrics=["accuracy"],
         )
 
-    # TODO: validation data via a dataset class
     def fit(self, validation_data=None):
         batched_data = self.dataset.make_tf_batched_data(self.params["batch_size"])
-        self.model.fit(batched_data, epochs=self.params["epochs"])
+        if validation_data:
+            batched_val = validation_data.make_tf_batched_data(
+                self.params["batch_size"]
+            )
+        else:
+            batched_val = None
+        self.model.fit(
+            batched_data, epochs=self.params["epochs"], validation_data=batched_val
+        )
 
     def save(self):
         self.model.save(f"models/{self.name}/model.h5")
