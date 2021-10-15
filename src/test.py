@@ -22,7 +22,7 @@ def test(model_class, preprocessor_class):
 
     ds._features = preprocessor.apply(ds._features)
 
-    model = globals()[model_class](train=False, dataset=ds)
+    model = globals()[model_class](dataset=ds)
     model.load()
 
     Y_test_pred = model.predict()

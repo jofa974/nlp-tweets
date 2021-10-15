@@ -9,9 +9,8 @@ from src.logger import logger
 
 
 class CustomModel:
-    def __init__(self, train=True, dataset=None):
+    def __init__(self, dataset=None):
         self.model = None
-        self.train = train
         self.dataset = dataset
         self.name = self.__class__.__name__
         self.get_params()
@@ -39,7 +38,6 @@ class CustomModel:
 class SKLogisticRegression(CustomModel):
     def __init__(self, train=True, dataset=None):
         super(SKLogisticRegression, self).__init__(
-            train=train,
             dataset=dataset,
         )
 
@@ -59,7 +57,6 @@ class SKLogisticRegression(CustomModel):
 class TFConv1D(CustomModel):
     def __init__(self, train=True, dataset=None):
         super(TFConv1D, self).__init__(
-            train=train,
             dataset=dataset,
         )
 

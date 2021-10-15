@@ -23,7 +23,7 @@ def train(model_class, preprocessor_class):
 
     ds._features = preprocessor.apply(ds._features)
 
-    model = globals()[model_class](train=True, dataset=ds)
+    model = globals()[model_class](dataset=ds)
     model.make_model(vocab_size=preprocessor.vocab_size)
     model.fit()
 
