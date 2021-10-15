@@ -1,10 +1,13 @@
-from src.prepare import SKCountVectorizer
+from src.prepare import Preprocessor
 
 
 def test_cleanup():
+    pass
+
+
+def test_remove_url():
     text = "'By accident' they knew what was gon happen https://t.co/Ysxun5vCeh"
-    obj = SKCountVectorizer()
-    result = obj.cleanup(text)
+    result = Preprocessor.remove_url(text)
     expected = "'By accident' they knew what was gon happen "
 
     assert result == expected

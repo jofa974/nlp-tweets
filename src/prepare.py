@@ -36,11 +36,10 @@ class Preprocessor(ABC):
     def save(self):
         joblib.dump(self.preprocessor, self.out_path / "preproc.joblib")
 
-    def cleanup(self, text):
+    @staticmethod
+    def remove_url(text):
 
-        """Remove substrings that will hinder the model:
-        - urls
-        - ??
+        """Remove url substrings that will hinder the model:
 
         Parameters
         ----------
@@ -50,7 +49,7 @@ class Preprocessor(ABC):
         Returns
         -------
         str:
-            The cleaned up string.
+            The string without urls.
         """
         return re.sub(r"https?://\S+", "", text)
 
@@ -62,9 +61,8 @@ class Preprocessor(ABC):
         )
         return lemma
 
-    def read_clean(self):
-        df = pd.read_csv("data/raw/train.csv")
-        df["text_clean"] = df["text"].progress_apply(self.cleanup)
+    def clean_text(self, text):
+        text_clean = text.progress_apply(self.remove_url)
 
         nlp = spacy.load("en_core_web_sm")
         df["text_clean"] = df["text_clean"].progress_apply(
@@ -107,7 +105,7 @@ class Preprocessor(ABC):
 
         tqdm.pandas()
 
-        self.read_clean()
+        self.clean_text()
         self.tts()
         self.make_preprocessor()
         self.save()

@@ -108,7 +108,8 @@ class TFConv1D(CustomModel):
         self.dataset = self.dataset.shuffle(buffer_size)
         self.dataset = self.dataset.batch(self.params["batch_size"])
 
-    def fit(self):
+    # TODO: validation data via a dataset class
+    def fit(self, validation_data=None):
         self.model.fit(self.dataset, epochs=self.params["epochs"])
 
     def save(self):
