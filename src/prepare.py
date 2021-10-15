@@ -9,9 +9,9 @@ import pandas as pd
 import spacy
 import tensorflow as tf
 from sklearn.feature_extraction.text import CountVectorizer
-from sklearn.model_selection import train_test_split
 from spacy.lang.en.stop_words import STOP_WORDS
 
+from src.dataset import Dataset
 from src.logger import logger
 
 
@@ -23,18 +23,18 @@ class Preprocessor(ABC):
         self.nlp = spacy.load("en_core_web_sm")
 
     @abstractmethod
-    def make_preprocessor(self, texts):
+    def fit(self, texts):
         pass
 
-    def load(self):
-        self.preprocessor = joblib.load(self.out_path / "preproc.joblib")
-
     @abstractmethod
-    def apply_preprocessor(self, texts):
+    def apply(self, texts):
         pass
 
     def save(self):
         joblib.dump(self.preprocessor, self.out_path / "preproc.joblib")
+
+    def load(self):
+        self.preprocessor = joblib.load(self.out_path / "preproc.joblib")
 
     @staticmethod
     def remove_url(text):
@@ -72,35 +72,6 @@ class Preprocessor(ABC):
         )
         return lemma
 
-    def tts(self, save=True):
-        self.X_train, self.X_test, self.Y_train, self.Y_test = train_test_split(
-            self.df["text_clean"].values,
-            self.df["target"].values,
-            test_size=0.2,
-            random_state=42,
-        )
-        self.X_train, self.X_val, self.Y_train, self.Y_val = train_test_split(
-            self.X_train, self.Y_train, test_size=0.2, random_state=42
-        )
-        if save:
-            logger.info("Saving texts...")
-            texts = {
-                "train": self.X_train.tolist(),
-                "val": self.X_val.tolist(),
-                "test": self.X_test.tolist(),
-            }
-            with open(self.out_path / "texts.json", "w") as f:
-                json.dump(texts, f)
-
-            logger.info("Saving labels...")
-            labels = {
-                "train": self.Y_train.tolist(),
-                "val": self.Y_val.tolist(),
-                "test": self.Y_test.tolist(),
-            }
-            with open(self.out_path / "labels.json", "w") as f:
-                json.dump(labels, f)
-
     def prepare(self):
 
         logger.info("I am preparing the data !")
@@ -122,12 +93,12 @@ class TFTokenizer(Preprocessor):
     def __init__(self):
         super(TFTokenizer, self).__init__()
 
-    def make_preprocessor(self):
+    def fit(self):
         logger.info("Tokenizing...")
         self.preprocessor = tf.keras.preprocessing.text.Tokenizer()
         self.preprocessor.fit_on_texts(self.df["text_clean"])
 
-    def apply_preprocessor(self, texts):
+    def apply(self, texts):
         processed_text = self.preprocessor.texts_to_sequences(texts)
         processed_text = tf.keras.preprocessing.sequence.pad_sequences(
             processed_text, padding="post"
@@ -143,12 +114,12 @@ class SKCountVectorizer(Preprocessor):
     def __init__(self):
         super(SKCountVectorizer, self).__init__()
 
-    def make_preprocessor(self):
+    def fit(self, texts):
         logger.info("Vectorizing...")
         self.preprocessor = CountVectorizer()
-        self.preprocessor.fit(self.df["text_clean"])
+        self.preprocessor.fit(texts)
 
-    def apply_preprocessor(self, texts):
+    def apply(self, texts):
         processed_text = self.preprocessor.transform(texts)
         return processed_text
 
@@ -169,5 +140,12 @@ if __name__ == "__main__":
     # TODO: use factory
     constructors = {"SKCountVectorizer": SKCountVectorizer, "TFTokenizer": TFTokenizer}
 
+    ds = Dataset()
+    ds.load_raw_to_df(raw_file="data/raw/train.csv")
+
     preprocessor = constructors[args.preprocessor]()
-    preprocessor.prepare()
+    ds.prepare_features(preprocessor)
+    ds.train_test_split(out_path=Path("data/prepared") / args.preprocessor)
+
+    preprocessor.fit(ds._features)
+    preprocessor.save()
