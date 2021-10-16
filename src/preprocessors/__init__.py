@@ -1,4 +1,5 @@
 from src.preprocessors.SKCountVectorizer import SKCountVectorizer
+from src.preprocessors.SKTfidfVectorizer import SKTfidfVectorizer
 from src.preprocessors.TFTokenizer import TFTokenizer
 
 
@@ -18,4 +19,5 @@ class PreprocessorFactory:
 
 preprocessor_factory = PreprocessorFactory()
 preprocessor_factory.register_method("SKCountVectorizer", SKCountVectorizer)
+preprocessor_factory.register_method("SKTfidfVectorizer", SKTfidfVectorizer)
 preprocessor_factory.register_method("TFTokenizer", TFTokenizer)

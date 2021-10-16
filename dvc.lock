@@ -65,15 +65,15 @@ stages:
       md5: d41d8cd98f00b204e9800998ecf8427e
       size: 0
   train@1:
-    cmd: python src/train.py --model-class=TFConv1D --preprocessor=TFTokenizer
+    cmd: python src/train.py --model-class=TFConv1D --preprocessor=SKTfidfVectorizer
     deps:
-    - path: data/prepared/TFTokenizer/labels.json
+    - path: data/prepared/SKTfidfVectorizer/labels.json
       md5: 76e06f8528ff37525b0f13d4dc8d6d0e
       size: 22860
-    - path: data/prepared/TFTokenizer/preproc.joblib
-      md5: fdeabbd8fff7ca7ca34aea541e46cf9a
-      size: 669288
-    - path: data/prepared/TFTokenizer/texts.json
+    - path: data/prepared/SKTfidfVectorizer/preproc.joblib
+      md5: 553d19502e62169ae0e410d192d99c18
+      size: 488828
+    - path: data/prepared/SKTfidfVectorizer/texts.json
       md5: 991dfd263b8f099134356763e119a105
       size: 523430
     - path: src/dataset.py
@@ -89,28 +89,28 @@ stages:
       params.yaml:
         TFConv1D:
           lr: 0.001
-          batch_size: 64
+          batch_size: 128
           epochs: 50
     outs:
     - path: models/TFConv1D/model.h5
-      md5: 33be95f9673b10bf20dd326dddca5b84
-      size: 103672
+      md5: 002ec149d077d0d15eaa4a635ad030aa
+      size: 12807160
     - path: models/TFConv1D/train_metrics.json
-      md5: 37b1c668f1cfb8385e49fa8bc10f037d
+      md5: a70000ef49252bffa0fc08311b2739fe
       size: 32
   test@1:
-    cmd: python src/test.py --model-class=TFConv1D --preprocessor=TFTokenizer
+    cmd: python src/test.py --model-class=TFConv1D --preprocessor=SKTfidfVectorizer
     deps:
     - path: models/TFConv1D/model.h5
-      md5: 33be95f9673b10bf20dd326dddca5b84
-      size: 103672
+      md5: 002ec149d077d0d15eaa4a635ad030aa
+      size: 12807160
     - path: src/test.py
       md5: a65caf783ec0622c37a1970be0078552
       size: 1476
     outs:
     - path: models/TFConv1D/test_metrics.json
-      md5: cd90ab12ce9f9ea88ce3a5eca90c0bc7
-      size: 33
+      md5: 158dc356adb14211ffd84db2f4ce22a7
+      size: 32
   predict@1:
     cmd: python src/predict.py --model-class=TFConv1D
     deps:
@@ -118,11 +118,11 @@ stages:
       md5: ff248529f207ea164d73636e5b1b251d
       size: 420783
     - path: models/TFConv1D/model.h5
-      md5: 33be95f9673b10bf20dd326dddca5b84
-      size: 103672
+      md5: 002ec149d077d0d15eaa4a635ad030aa
+      size: 12807160
     - path: models/TFConv1D/test_metrics.json
-      md5: cd90ab12ce9f9ea88ce3a5eca90c0bc7
-      size: 33
+      md5: 158dc356adb14211ffd84db2f4ce22a7
+      size: 32
     - path: src/predict.py
       md5: dcd79102586cf025166345b58fe5e825
       size: 605

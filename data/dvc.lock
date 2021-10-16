@@ -44,3 +44,25 @@ stages:
     - path: data/prepared/SKCountVectorizer/texts.json
       md5: 991dfd263b8f099134356763e119a105
       size: 523430
+  prepare_data@SKTfidfVectorizer:
+    cmd: python src/prepare.py --preprocessor=SKTfidfVectorizer
+    deps:
+    - path: data/raw/train.csv
+      md5: f147942c91d00d754503775341d13682
+      size: 987712
+    - path: src/prepare.py
+      md5: 00dfdbef350577a0f037290a8a3be278
+      size: 864
+    - path: src/preprocessors/SKTfidfVectorizer.py
+      md5: cc3b741196ac214750ff1b373550540f
+      size: 637
+    outs:
+    - path: data/prepared/SKTfidfVectorizer/labels.json
+      md5: 76e06f8528ff37525b0f13d4dc8d6d0e
+      size: 22860
+    - path: data/prepared/SKTfidfVectorizer/preproc.joblib
+      md5: 553d19502e62169ae0e410d192d99c18
+      size: 488828
+    - path: data/prepared/SKTfidfVectorizer/texts.json
+      md5: 991dfd263b8f099134356763e119a105
+      size: 523430

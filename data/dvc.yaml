@@ -3,6 +3,7 @@ stages:
     foreach:
       - SKCountVectorizer
       - TFTokenizer
+      - SKTfidfVectorizer
     do:
       wdir: ../
       cmd: python src/prepare.py --preprocessor=${item}

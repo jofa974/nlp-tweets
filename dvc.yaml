@@ -4,7 +4,7 @@ stages:
       - preprocessor: SKCountVectorizer
         model_class: SKLogisticRegression
         output: model.joblib
-      - preprocessor: TFTokenizer
+      - preprocessor: SKTfidfVectorizer
         model_class: TFConv1D
         output: model.h5
     do:
@@ -29,7 +29,7 @@ stages:
       - preprocessor: SKCountVectorizer
         model_class: SKLogisticRegression
         file: model.joblib
-      - preprocessor: TFTokenizer
+      - preprocessor: SKTfidfVectorizer
         model_class: TFConv1D
         file: model.h5
     do:
