@@ -1,5 +1,17 @@
+import os
+import random
+
+import numpy as np
+import tensorflow as tf
 from src.models.SKLogisticRegression import SKLogisticRegression
 from src.models.TFConv1D import TFConv1D
+
+SEED = 42
+os.environ["PYTHONHASHSEED"] = str(SEED)
+os.environ["TF_CUDNN_DETERMINISTIC"] = "1"  # new flag present in tf 2.0+
+random.seed(SEED)
+np.random.seed(SEED)
+tf.random.set_seed(SEED)
 
 
 class ModelFactory:
