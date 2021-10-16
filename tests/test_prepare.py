@@ -1,4 +1,4 @@
-from src.prepare import Preprocessor
+from src.preprocessors.abstract import Preprocessor
 
 
 def test_cleanup():

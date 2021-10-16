@@ -1,7 +1,7 @@
 from pathlib import Path
 
 from src.dataset import Dataset
-from src.prepare import Preprocessor, SKCountVectorizer
+from src.preprocessors import constructors
 
 ds = Dataset()
 
@@ -15,7 +15,7 @@ def test_prepare_features():
     ds = Dataset()
     ds.load_raw_to_df(raw_file=Path(__file__).parent.resolve() / "train_sample.csv")
 
-    preprocessor = SKCountVectorizer()
+    preprocessor = constructors["SKCountVectorizer"]()
 
     ds.prepare_features(preprocessor)
 
