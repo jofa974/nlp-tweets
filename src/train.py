@@ -2,19 +2,17 @@ import argparse
 import json
 from pathlib import Path
 
-import yaml
 from sklearn.metrics import f1_score
-from sklearn.utils import validation
 
 from models import SKLogisticRegression, TFConv1D
-from src import preprocessors
 from src.dataset import Dataset
 from src.logger import logger
+from src.preprocessors import preprocessor_factory
 
 
 def train(model_class, preprocessor_class):
 
-    preprocessor = preprocessors.constructors[preprocessor_class]()
+    preprocessor = preprocessor_factory.get_preprocessor(args.preprocessor)
     preprocessor.load()
 
     data_path = Path(f"data/prepared/{preprocessor_class}")

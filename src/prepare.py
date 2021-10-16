@@ -1,9 +1,9 @@
 import argparse
 from pathlib import Path
 
-from src import preprocessors
 from src.dataset import Dataset
 from src.logger import logger
+from src.preprocessors import preprocessor_factory
 
 if __name__ == "__main__":
 
@@ -21,7 +21,7 @@ if __name__ == "__main__":
     ds = Dataset()
     ds.load_raw_to_df(raw_file="data/raw/train.csv")
 
-    preprocessor = preprocessors.constructors[args.preprocessor]()
+    preprocessor = preprocessor_factory.get_preprocessor(args.preprocessor)
     ds.prepare_features(preprocessor)
     ds.train_test_split(save_path=Path("data/prepared") / args.preprocessor)
 
