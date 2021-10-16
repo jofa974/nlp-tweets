@@ -7,14 +7,14 @@ from sklearn.metrics import f1_score
 from sklearn.utils import validation
 
 from models import SKLogisticRegression, TFConv1D
-from prepare import SKCountVectorizer, TFTokenizer
+from src import preprocessors
 from src.dataset import Dataset
 from src.logger import logger
 
 
 def train(model_class, preprocessor_class):
 
-    preprocessor = globals()[preprocessor_class]()
+    preprocessor = preprocessors.constructors[preprocessor_class]()
     preprocessor.load()
 
     data_path = Path(f"data/prepared/{preprocessor_class}")
