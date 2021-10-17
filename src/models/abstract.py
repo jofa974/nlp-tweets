@@ -22,8 +22,9 @@ class Model(ABC):
     def fit(self, validation_data=None):
         raise NotImplementedError
 
+    @abstractmethod
     def predict(self):
-        return self.model.predict(self.dataset._features)
+        raise NotImplementedError
 
     def predict_class(self, threshold):
         predictions = self.predict()

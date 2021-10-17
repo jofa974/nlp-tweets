@@ -14,15 +14,18 @@ jobs:
           # Install requirements
           pip install -r requirements.txt
           pip install -e .
-          
+
           # Pull data & run-cache from gdrive and reproduce pipeline
           dvc pull data/raw --run-cache
           dvc repro
-          
+
           # Report metrics
           echo "## Metrics" >> report.md
           git fetch --prune
           dvc metrics diff master --show-md >> report.md
+
+          echo "## ROC curves" >> report.md
+          echo '![roc curves](./roc_curves.png)' >> report.md
 
           # # Publish confusion matrix diff
           # echo "## Plots" >> report.md
@@ -33,5 +36,5 @@ jobs:
           # echo "### Effects of regularization" >> report.md
           # dvc plots diff --target estimators.csv -x Regularization --show-vega master > vega.json
           # vl2png vega.json -s 1.5 | cml-publish --md >> report.md
-          
+
           cml-send-comment report.md

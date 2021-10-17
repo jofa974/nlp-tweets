@@ -5,3 +5,4 @@ app_debug.log
 *.ipynb
 
 *egg-info
+/roc_curves.png

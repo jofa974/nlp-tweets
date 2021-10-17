@@ -41,7 +41,7 @@ class TFDense(Model):
         )
 
     def predict(self):
-        predictions = super().predict()
+        predictions = self.model.predict(self.dataset._features)
         return tf.squeeze(predictions)
 
     def save(self):
