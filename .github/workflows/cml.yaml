@@ -25,7 +25,7 @@ jobs:
           dvc metrics diff master --show-md >> report.md
 
           echo "## ROC curves" >> report.md
-          echo '![roc curves](./roc_curves.png)' >> report.md
+          cml-publish ./roc_curves.png --md >> report.md
 
           # # Publish confusion matrix diff
           # echo "## Plots" >> report.md
