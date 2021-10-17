@@ -43,6 +43,8 @@ stages:
       deps:
         - models/${item.model_class}/${item.file}
         - src/test.py
+      outs:
+        - models/${item.model_class}/test_predictions.csv
       metrics:
         - models/${item.model_class}/test_metrics.json:
             cache: false

@@ -1,3 +1,4 @@
+import numpy as np
 import argparse
 import json
 from pathlib import Path
@@ -25,7 +26,10 @@ def test(model_class, preprocessor_class):
     model = model_factory.get_model(model_class, dataset=ds)
     model.load()
 
-    Y_test_pred = model.predict()
+    predictions = model.predict()
+    np.savetxt(f"models/{model_class}/test_predictions.csv", predictions)
+
+    Y_test_pred = model.predict_class(threshold=0.5)
 
     metrics = {"f1_score": f1_score(y_true=ds._labels, y_pred=Y_test_pred)}
 
