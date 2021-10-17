@@ -2,9 +2,9 @@ import tensorflow as tf
 from src.models.abstract import Model
 
 
-class TFConv1D(Model):
+class TFDense(Model):
     def __init__(self, dataset=None):
-        super(TFConv1D, self).__init__(
+        super(TFDense, self).__init__(
             dataset=dataset,
         )
 
@@ -15,21 +15,9 @@ class TFConv1D(Model):
         input_shape = self.dataset.input_shape
         self.model = tf.keras.models.Sequential(
             [
-                # Layer Input Word Embedding
-                tf.keras.layers.Embedding(
-                    vocab_size + 1,
-                    output_dim=32,
-                    input_shape=[
-                        input_shape,
-                    ],
-                ),
-                tf.keras.layers.Conv1D(16, 3, activation="relu"),
-                # Flatten
-                tf.keras.layers.Flatten(),
-                # Layer Dense classique
-                tf.keras.layers.Dense(64, activation="relu"),
+                tf.keras.layers.Dense(64, input_shape=[input_shape], activation="relu"),
                 tf.keras.layers.Dropout(0.2),
-                tf.keras.layers.Dense(32, activation="relu"),
+                tf.keras.layers.Dense(64, activation="relu"),
                 tf.keras.layers.Dropout(0.2),
                 tf.keras.layers.Dense(1, activation="sigmoid"),
             ]

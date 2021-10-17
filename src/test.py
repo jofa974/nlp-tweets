@@ -26,6 +26,7 @@ def test(model_class, preprocessor_class):
     model.load()
 
     Y_test_pred = model.predict()
+
     metrics = {"f1_score": f1_score(y_true=ds._labels, y_pred=Y_test_pred)}
 
     with open(f"models/{model_class}/test_metrics.json", "w") as f:

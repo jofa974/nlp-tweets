@@ -4,8 +4,11 @@ stages:
       - preprocessor: SKCountVectorizer
         model_class: SKLogisticRegression
         output: model.joblib
-      - preprocessor: SKTfidfVectorizer
+      - preprocessor: TFTokenizer
         model_class: TFConv1D
+        output: model.h5
+      - preprocessor: SKTfidfVectorizer
+        model_class: TFDense
         output: model.h5
     do:
       cmd: python src/train.py --model-class=${item.model_class} --preprocessor=${item.preprocessor}
@@ -29,8 +32,11 @@ stages:
       - preprocessor: SKCountVectorizer
         model_class: SKLogisticRegression
         file: model.joblib
-      - preprocessor: SKTfidfVectorizer
+      - preprocessor: TFTokenizer
         model_class: TFConv1D
+        file: model.h5
+      - preprocessor: SKTfidfVectorizer
+        model_class: TFDense
         file: model.h5
     do:
       cmd: python src/test.py --model-class=${item.model_class} --preprocessor=${item.preprocessor}
@@ -46,6 +52,8 @@ stages:
       - model_class: SKLogisticRegression
         file: model.joblib
       - model_class: TFConv1D
+        file: model.h5
+      - model_class: TFDense
         file: model.h5
     do:
       cmd: python src/predict.py --model-class=${item.model_class}
