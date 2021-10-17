@@ -63,7 +63,6 @@ class Dataset:
         return train_ds, test_ds
 
     def load_features(self, dir_path, stage="train"):
-        # out_path = Path(f"data/prepared/{preprocessor_class}")
         with open(dir_path / "texts.json", "r") as f:
             self._features = json.load(f)[stage]
 

@@ -1,3 +1,4 @@
+import pandas as pd
 import numpy as np
 import argparse
 import json
@@ -27,7 +28,8 @@ def test(model_class, preprocessor_class):
     model.load()
 
     predictions = model.predict()
-    np.savetxt(f"models/{model_class}/test_predictions.csv", predictions)
+    df = pd.DataFrame({"y_pred": predictions, "y_true": ds._labels})
+    df.to_csv(f"models/{model_class}/test_predictions.csv", index=False)
 
     Y_test_pred = model.predict_class(threshold=0.5)
 
