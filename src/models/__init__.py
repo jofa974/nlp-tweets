@@ -5,6 +5,7 @@ import numpy as np
 import tensorflow as tf
 from src.models.SKLogisticRegression import SKLogisticRegression
 from src.models.TFConv1D import TFConv1D
+from src.models.TFDense import TFDense
 
 SEED = 42
 os.environ["PYTHONHASHSEED"] = str(SEED)
@@ -31,3 +32,4 @@ class ModelFactory:
 model_factory = ModelFactory()
 model_factory.register_model("SKLogisticRegression", SKLogisticRegression)
 model_factory.register_model("TFConv1D", TFConv1D)
+model_factory.register_model("TFDense", TFDense)

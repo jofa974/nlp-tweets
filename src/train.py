@@ -26,6 +26,8 @@ def train(model_class, preprocessor_class):
 
     model = model_factory.get_model(model_class, dataset=ds)
     model.make_model(vocab_size=preprocessor.vocab_size)
+
+    model.summary()
     model.fit(validation_data=val_ds)
 
     Y_train_pred = model.predict()

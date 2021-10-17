@@ -1,4 +1,4 @@
-from abc import ABC, abstractmethod
+from abc import ABC, abstractmethod, abstractstaticmethod
 
 import yaml
 
@@ -9,6 +9,10 @@ class Model(ABC):
         self.dataset = dataset
         self.name = self.__class__.__name__
         self.get_params()
+
+    @abstractmethod
+    def summary(self):
+        raise NotImplementedError
 
     @abstractmethod
     def make_model(self, vocab_size=0):

@@ -9,6 +9,9 @@ class SKLogisticRegression(Model):
             dataset=dataset,
         )
 
+    def summary(self):
+        print(self.model.__class__)
+
     def make_model(self, vocab_size=0):
         self.model = LogisticRegression(max_iter=100)
 
