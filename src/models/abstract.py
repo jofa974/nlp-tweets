@@ -1,4 +1,4 @@
-from abc import ABC, abstractmethod, abstractstaticmethod
+from abc import ABC, abstractmethod
 
 import yaml
 
@@ -22,9 +22,12 @@ class Model(ABC):
     def fit(self, validation_data=None):
         raise NotImplementedError
 
+    @abstractmethod
     def predict(self):
-        predictions = self.model.predict(self.dataset._features)
-        threshold = 0.5
+        raise NotImplementedError
+
+    def predict_class(self, threshold):
+        predictions = self.predict()
         return list(map((lambda x: 1 if x > threshold else 0), predictions))
 
     @abstractmethod

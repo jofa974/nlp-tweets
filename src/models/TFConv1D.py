@@ -52,6 +52,10 @@ class TFConv1D(Model):
             batched_data, epochs=self.params["epochs"], validation_data=batched_val
         )
 
+    def predict(self):
+        predictions = self.model.predict(self.dataset._features)
+        return tf.squeeze(predictions)
+
     def save(self):
         self.model.save(f"models/{self.name}/model.h5")
 

@@ -30,7 +30,7 @@ def train(model_class, preprocessor_class):
     model.summary()
     model.fit(validation_data=val_ds)
 
-    Y_train_pred = model.predict()
+    Y_train_pred = model.predict_class(threshold=0.5)
     metrics = {"f1_score": f1_score(y_true=ds._labels, y_pred=Y_train_pred)}
 
     with open(f"models/{model_class}/train_metrics.json", "w") as f:

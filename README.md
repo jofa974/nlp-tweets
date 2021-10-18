@@ -4,6 +4,28 @@
 
 This repo is used to practice the developement of ML models for NLP and building good habits with MLOps.
 
+The initial requirements are:
+
+```bash
+tensorflow
+tensorflow-gpu
+dvc
+dvc[gdrive]
+matplotlib
+pandas
+jupyter
+ipykernel
+pytest
+black
+flake8
+joblib
+spacy
+sklearn
+en-core-web-sm @ https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-3.0.0/en_core_web_sm-3.0.0-py3-none-any.whl
+```
+
+The `requirements.txt` file will be updated along the way to ensure reproducibility.
+
 ## Plan
 
 ### Minimalist pipeline
@@ -20,6 +42,7 @@ The data preprocessing will constitute an important part of the development. The
 - CountVectorizer from sklearn
 - TfidfVectorizer from sklearn
 - TFTokenizer from tensorflow
+
 ### Model
 
 Classical ML and deep learning models will be investigated:
