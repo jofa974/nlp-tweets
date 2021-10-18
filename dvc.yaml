@@ -18,6 +18,7 @@ stages:
         - data/prepared/${item.preprocessor}/preproc.joblib
         - src/train.py
         - src/dataset.py
+        - src/models/abstract.py
         - src/models/${item.model_class}.py
       params:
         - ${item.model_class}

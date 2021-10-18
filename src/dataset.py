@@ -31,8 +31,7 @@ class Dataset:
     def prepare_features(self, preprocessor):
         tqdm.pandas()
 
-        self._features = self._features.progress_apply(preprocessor.remove_url)
-        self._features = self._features.progress_apply(preprocessor.lemmatize)
+        self._features = self._features.progress_apply(preprocessor.clean_all)
 
     def train_test_split(self, save_path=""):
         X_train, X_test, Y_train, Y_test = train_test_split(
