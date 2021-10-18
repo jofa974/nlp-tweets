@@ -1,4 +1,5 @@
 import re
+
 from abc import ABC, abstractmethod
 from pathlib import Path
 
@@ -27,6 +28,11 @@ class Preprocessor(ABC):
 
     def load(self):
         self.preprocessor = joblib.load(self.out_path / "preproc.joblib")
+
+    @staticmethod
+    def remove_html(text):
+        html = re.compile(r"<.*?>")
+        return html.sub(r"", text)
 
     @staticmethod
     def remove_emoji(text):
