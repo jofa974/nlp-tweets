@@ -49,6 +49,12 @@ class Preprocessor(ABC):
         return " ".join(correct_text)
 
     @staticmethod
+    def remove_mention(text):
+        # Remove @ and mention, replace by USER
+        at = re.compile(r"@\S+")
+        return at.sub(r"USER", text)
+
+    @staticmethod
     def remove_emoji(text):
         emoji_pattern = re.compile(
             "["

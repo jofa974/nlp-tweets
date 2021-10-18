@@ -27,6 +27,13 @@ def test_remove_html():
     assert result == expected
 
 
+def test_remove_mention():
+    text = "Hey @ElonMusk"
+    result = Preprocessor.remove_mention(text)
+    expected = "Hey USER"
+    assert result == expected
+
+
 def test_remove_emoji():
     text = "Heeyyy \U0001F600 \U0001F300 "
     result = Preprocessor.remove_emoji(text)
