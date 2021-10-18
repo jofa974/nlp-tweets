@@ -3,9 +3,9 @@ from src.models.abstract import Model
 import datetime
 
 
-class TFConv1D(Model):
+class TFlstm(Model):
     def __init__(self, dataset=None):
-        super(TFConv1D, self).__init__(
+        super(TFlstm, self).__init__(
             dataset=dataset,
         )
 
@@ -19,14 +19,13 @@ class TFConv1D(Model):
                 # Layer Input Word Embedding
                 tf.keras.layers.Embedding(
                     vocab_size + 1,
-                    output_dim=32,
+                    output_dim=512,
                     input_shape=[
                         input_shape,
                     ],
                 ),
-                tf.keras.layers.Conv1D(16, 3, activation="relu"),
-                # Flatten
-                tf.keras.layers.Flatten(),
+                tf.keras.layers.Dropout(0.2),
+                tf.keras.layers.LSTM(128, dropout=0.2),
                 # Layer Dense classique
                 tf.keras.layers.Dense(64, activation="relu"),
                 tf.keras.layers.Dropout(0.2),
@@ -48,9 +47,9 @@ class TFConv1D(Model):
                 self.params["batch_size"]
             )
         else:
-
             batched_val = None
-        log_dir = f"models/logs/{self.model.name}" + datetime.datetime.now().strftime(
+
+        log_dir = f"models/logs/{self.name}" + datetime.datetime.now().strftime(
             "%Y%m%d-%H%M%S"
         )
         tensorboard_callback = tf.keras.callbacks.TensorBoard(

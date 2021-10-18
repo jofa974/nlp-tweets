@@ -7,6 +7,9 @@ stages:
       - preprocessor: TFTokenizer
         model_class: TFConv1D
         output: model.h5
+      - preprocessor: TFTokenizer
+        model_class: TFlstm
+        output: model.h5
       - preprocessor: SKTfidfVectorizer
         model_class: TFDense
         output: model.h5
@@ -36,6 +39,9 @@ stages:
       - preprocessor: TFTokenizer
         model_class: TFConv1D
         file: model.h5
+      - preprocessor: TFTokenizer
+        model_class: TFlstm
+        file: model.h5
       - preprocessor: SKTfidfVectorizer
         model_class: TFDense
         file: model.h5
@@ -55,6 +61,8 @@ stages:
       - model_class: SKLogisticRegression
         file: model.joblib
       - model_class: TFConv1D
+        file: model.h5
+      - model_class: TFlstm
         file: model.h5
       - model_class: TFDense
         file: model.h5
