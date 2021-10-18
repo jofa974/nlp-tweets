@@ -7,6 +7,7 @@ from pathlib import Path
 import joblib
 import spacy
 from spacy.lang.en.stop_words import STOP_WORDS
+from .abbreviations import ABBREVIATIONS
 
 
 class Preprocessor(ABC):
@@ -84,6 +85,52 @@ class Preprocessor(ABC):
             The string without urls.
         """
         return re.sub(r"https?://\S+", "", text)
+
+    @staticmethod
+    def remove_number(text):
+        # Remove numbers, replace it by NUMBER
+        num = re.compile(r"[-+]?[.\d]*[\d]+[:,.\d]*")
+        return num.sub(r"NUMBER", text)
+
+    @staticmethod
+    def transcription_sad(text):
+        # Replace some others smileys with SADFACE
+        eyes = "[8:=;]"
+        nose = "['`\-]"
+        smiley = re.compile(r"[8:=;][\'\-]?[(\\/]")
+        return smiley.sub(r"SADFACE", text)
+
+    @staticmethod
+    def transcription_smile(text):
+        # Replace some smileys with SMILE
+        smiley = re.compile(r"[8:=;][\'\-]?[)dDp]")
+        return smiley.sub(r"SMILE", text)
+
+    @staticmethod
+    def transcription_heart(text):
+        # Replace <3 with HEART
+        heart = re.compile(r"<3")
+        return heart.sub(r"HEART", text)
+
+    @staticmethod
+    def replace_abbrev(text):
+        string = ""
+        for word in text.split():
+            string += ABBREVIATIONS.get(word.lower(), word) + " "
+        return string
+
+    def clean_all(self, text):
+        text = self.remove_url(text)
+        text = self.remove_emoji(text)
+        text = self.replace_abbrev(text)
+        text = self.remove_mention(text)
+        text = self.remove_number(text)
+        text = self.transcription_sad(text)
+        text = self.transcription_smile(text)
+        text = self.transcription_heart(text)
+        # text = self.correct_spelling(text)
+        text = self.lemmatize(text)
+        return text
 
     def lemmatize(self, text):
         """Transform text string to string of lemmas using spacy.
