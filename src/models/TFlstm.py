@@ -1,5 +1,6 @@
 import tensorflow as tf
 from src.models.abstract import Model
+import datetime
 
 
 class TFlstm(Model):
@@ -18,17 +19,18 @@ class TFlstm(Model):
                 # Layer Input Word Embedding
                 tf.keras.layers.Embedding(
                     vocab_size + 1,
-                    output_dim=32,
+                    output_dim=512,
                     input_shape=[
                         input_shape,
                     ],
                 ),
                 tf.keras.layers.Dropout(0.2),
-                tf.keras.layers.LSTM(32, dropout=0.2, recurrent_dropout=0.4),
+                tf.keras.layers.LSTM(128, dropout=0.2),
                 # Layer Dense classique
-                # tf.keras.layers.Dense(64, activation="relu"),
-                # tf.keras.layers.Dense(32, activation="relu"),
-                # tf.keras.layers.Dropout(0.2),
+                tf.keras.layers.Dense(64, activation="relu"),
+                tf.keras.layers.Dropout(0.2),
+                tf.keras.layers.Dense(32, activation="relu"),
+                tf.keras.layers.Dropout(0.2),
                 tf.keras.layers.Dense(1, activation="sigmoid"),
             ]
         )
@@ -46,8 +48,18 @@ class TFlstm(Model):
             )
         else:
             batched_val = None
+
+        log_dir = f"models/logs/{self.name}" + datetime.datetime.now().strftime(
+            "%Y%m%d-%H%M%S"
+        )
+        tensorboard_callback = tf.keras.callbacks.TensorBoard(
+            log_dir=log_dir, histogram_freq=1
+        )
         self.model.fit(
-            batched_data, epochs=self.params["epochs"], validation_data=batched_val
+            batched_data,
+            epochs=self.params["epochs"],
+            validation_data=batched_val,
+            callbacks=[tensorboard_callback],
         )
 
     def predict(self):

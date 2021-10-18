@@ -52,3 +52,9 @@ Classical ML and deep learning models will be investigated:
 - logistic regression,
 - random forest,
 - deep neural networks with TensorFlow using LSTM, GRU, Conv1D ...
+
+### More ideas
+
+- learning rate scheduler
+- GloVe
+- Bert

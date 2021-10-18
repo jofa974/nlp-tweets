@@ -14,4 +14,4 @@ TFDense:
 TFlstm:
   lr: 0.0001
   batch_size: 128
-  epochs: 100
+  epochs: 200

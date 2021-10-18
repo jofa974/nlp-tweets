@@ -1,5 +1,6 @@
 import tensorflow as tf
 from src.models.abstract import Model
+import datetime
 
 
 class TFConv1D(Model):
@@ -47,9 +48,19 @@ class TFConv1D(Model):
                 self.params["batch_size"]
             )
         else:
+
             batched_val = None
+        log_dir = f"models/logs/{self.model.name}" + datetime.datetime.now().strftime(
+            "%Y%m%d-%H%M%S"
+        )
+        tensorboard_callback = tf.keras.callbacks.TensorBoard(
+            log_dir=log_dir, histogram_freq=1
+        )
         self.model.fit(
-            batched_data, epochs=self.params["epochs"], validation_data=batched_val
+            batched_data,
+            epochs=self.params["epochs"],
+            validation_data=batched_val,
+            callbacks=[tensorboard_callback],
         )
 
     def predict(self):

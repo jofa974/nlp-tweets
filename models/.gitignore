@@ -3,3 +3,4 @@
 assets
 variables
 *.pb
+/logs
