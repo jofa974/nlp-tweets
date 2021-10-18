@@ -1,3 +1,4 @@
+from spellchecker import SpellChecker
 import re
 
 from abc import ABC, abstractmethod
@@ -14,6 +15,7 @@ class Preprocessor(ABC):
         self.out_path = Path("data/prepared") / self.__class__.__name__
         self.out_path.mkdir(parents=True, exist_ok=True)
         self.nlp = spacy.load("en_core_web_sm")
+        self.spell = SpellChecker()
 
     @abstractmethod
     def fit(self, texts):
@@ -33,6 +35,18 @@ class Preprocessor(ABC):
     def remove_html(text):
         html = re.compile(r"<.*?>")
         return html.sub(r"", text)
+
+    def correct_spelling(self, text):
+        correct_text = []
+        misspelled_words = self.spell.unknown(text.split())
+
+        for word in text.split():
+            if word in misspelled_words:
+                correct_text.append(self.spell.correction(word))
+            else:
+                correct_text.append(word)
+
+        return " ".join(correct_text)
 
     @staticmethod
     def remove_emoji(text):

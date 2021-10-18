@@ -1,6 +1,25 @@
 from src.preprocessors.abstract import Preprocessor
 
 
+class ConcretePreproc(Preprocessor):
+    def fit():
+        pass
+
+    def apply():
+        pass
+
+    def vocab_size():
+        pass
+
+
+def test_spell_check():
+    text = "msiter wrong speling"
+    preproc = ConcretePreproc()
+    result = preproc.correct_spelling(text)
+    expected = "mister wrong spelling"
+    assert result == expected
+
+
 def test_remove_html():
     text = "<div><h1>COUCOU</h1></div>"
     result = Preprocessor.remove_html(text)

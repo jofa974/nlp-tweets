@@ -33,6 +33,7 @@ class Dataset:
 
         self._features = self._features.progress_apply(preprocessor.remove_url)
         self._features = self._features.progress_apply(preprocessor.remove_emoji)
+        # self._features = self._features.progress_apply(preprocessor.correct_spelling)
         self._features = self._features.progress_apply(preprocessor.lemmatize)
 
     def train_test_split(self, save_path=""):
