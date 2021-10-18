@@ -10,6 +10,7 @@ stages:
       deps:
         - data/raw/train.csv
         - src/prepare.py
+        - src/preprocessors/abstract.py
         - src/preprocessors/${item}.py
       outs:
         - data/prepared/${item}/texts.json
