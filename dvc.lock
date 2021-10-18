@@ -7,7 +7,7 @@ stages:
       md5: 76e06f8528ff37525b0f13d4dc8d6d0e
       size: 22860
     - path: data/prepared/SKCountVectorizer/preproc.joblib
-      md5: bf034f66a2ff9f237517c2581d1cc566
+      md5: 2537158c289165038a0d6bca53375b0f
       size: 223216
     - path: data/prepared/SKCountVectorizer/texts.json
       md5: 991dfd263b8f099134356763e119a105
@@ -16,8 +16,8 @@ stages:
       md5: ab792d95ea99ff7b7ad3241c9e44ffca
       size: 2591
     - path: src/models/SKLogisticRegression.py
-      md5: 96b4c9702a207b1bb3c6c2c685675d24
-      size: 1010
+      md5: 3c2f8b80c1cd29c01a6edeb533a93525
+      size: 1181
     - path: src/train.py
       md5: b09e35571ac6a7198afe3231a3cff1ef
       size: 1662
@@ -30,8 +30,8 @@ stages:
       md5: 8bf5e07f23f7504401eaeb282caeee4b
       size: 133331
     - path: models/SKLogisticRegression/train_metrics.json
-      md5: 495bb2b46e85376fcc7cc1d79f1c43c4
-      size: 33
+      md5: e9d99902a726e3e58ac2f60e64a3631a
+      size: 32
   test@0:
     cmd: python src/test.py --model-class=SKLogisticRegression --preprocessor=SKCountVectorizer
     deps:
@@ -43,11 +43,11 @@ stages:
       size: 1712
     outs:
     - path: models/SKLogisticRegression/test_metrics.json
-      md5: ecf6ff684a0a48b076e07b862c2501d7
-      size: 33
+      md5: cecf7e345c40487e25adc127e3867fc9
+      size: 32
     - path: models/SKLogisticRegression/test_predictions.csv
-      md5: d69afac53c0872b0f78f00fc4958fefa
-      size: 32408
+      md5: a6edbe1b8c2c716c6f3de9c795f55831
+      size: 32701
   predict@0:
     cmd: python src/predict.py --model-class=SKLogisticRegression
     deps:
@@ -58,8 +58,8 @@ stages:
       md5: 8bf5e07f23f7504401eaeb282caeee4b
       size: 133331
     - path: models/SKLogisticRegression/test_metrics.json
-      md5: ecf6ff684a0a48b076e07b862c2501d7
-      size: 33
+      md5: cecf7e345c40487e25adc127e3867fc9
+      size: 32
     - path: src/predict.py
       md5: dcd79102586cf025166345b58fe5e825
       size: 605
@@ -209,13 +209,13 @@ stages:
     cmd: python src/compare.py
     deps:
     - path: models
-      md5: 8d13758e43fa76015c70bab09e7bba32.dir
-      size: 19794190
-      nfiles: 17
+      md5: 92c28ab9d5c8ac977deb998c6eee512e.dir
+      size: 19794411
+      nfiles: 16
     - path: src/compare.py
       md5: 98e6758ba9136935249d845a0a509894
       size: 1028
     outs:
     - path: roc_curves.png
-      md5: a41e93020191796872f4c003d586b132
-      size: 34450
+      md5: 248dd8a3ffc253102738187ef7b6b2c5
+      size: 33984

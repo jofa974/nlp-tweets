@@ -20,7 +20,10 @@ class SKLogisticRegression(Model):
 
     def predict(self):
         predictions_proba = self.model.predict_proba(self.dataset._features)
-        return predictions_proba[:, 0]
+        # Select only probabilities of belonging to class 1 so that
+        # the implementation of predict_class follows the same logic
+        # as other model classes.
+        return predictions_proba[:, 1]
 
     def predict_class(self, threshold):
         predictions = self.predict()
