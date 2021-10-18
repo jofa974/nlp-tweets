@@ -143,6 +143,92 @@ stages:
       md5: d41d8cd98f00b204e9800998ecf8427e
       size: 0
   train@2:
+    cmd: python src/train.py --model-class=TFlstm --preprocessor=TFTokenizer
+    deps:
+    - path: data/prepared/TFTokenizer/labels.json
+      md5: 76e06f8528ff37525b0f13d4dc8d6d0e
+      size: 22860
+    - path: data/prepared/TFTokenizer/preproc.joblib
+      md5: e8b2d54bbf7eb0e4159445eb73d072b8
+      size: 541799
+    - path: data/prepared/TFTokenizer/texts.json
+      md5: db956128ffd8a325d8e1a290c8eda93d
+      size: 517672
+    - path: src/dataset.py
+      md5: ec07c88410f06d9854f74744b77490be
+      size: 2511
+    - path: src/models/TFlstm.py
+      md5: 7a72bd4f7a166a35a86f8f52166ea234
+      size: 2055
+    - path: src/models/abstract.py
+      md5: c1f903ca5687282956c8e7a9600b0349
+      size: 1012
+    - path: src/train.py
+      md5: b09e35571ac6a7198afe3231a3cff1ef
+      size: 1662
+    params:
+      params.yaml:
+        TFlstm:
+          lr: 0.001
+          batch_size: 128
+          epochs: 20
+    outs:
+    - path: models/TFlstm/model.h5
+      md5: 63faac78b46078cddea58d7c1a70d8e7
+      size: 5344976
+    - path: models/TFlstm/train_metrics.json
+      md5: 5e1c3ab8231c4020ba26ca964d479ab6
+      size: 32
+  test@2:
+    cmd: python src/test.py --model-class=TFlstm --preprocessor=TFTokenizer
+    deps:
+    - path: models/TFlstm/model.h5
+      md5: 63faac78b46078cddea58d7c1a70d8e7
+      size: 5344976
+    - path: src/test.py
+      md5: d1cd88e5103fab249ff91d143acbdd3d
+      size: 1712
+    outs:
+    - path: models/TFlstm/test_metrics.json
+      md5: b8fa2c7833bde0feee04ae299234a6f7
+      size: 32
+    - path: models/TFlstm/test_predictions.csv
+      md5: edd88b2c90ea03e32fd503cbbbfa994c
+      size: 20094
+  predict@2:
+    cmd: python src/predict.py --model-class=TFlstm
+    deps:
+    - path: data/raw/test.csv
+      md5: ff248529f207ea164d73636e5b1b251d
+      size: 420783
+    - path: models/TFlstm/model.h5
+      md5: 63faac78b46078cddea58d7c1a70d8e7
+      size: 5344976
+    - path: models/TFlstm/test_metrics.json
+      md5: b8fa2c7833bde0feee04ae299234a6f7
+      size: 32
+    - path: src/predict.py
+      md5: dcd79102586cf025166345b58fe5e825
+      size: 605
+    outs:
+    - path: data/predictions/TFlstm_prediction.csv
+      md5: d41d8cd98f00b204e9800998ecf8427e
+      size: 0
+  compare:
+    cmd: python src/compare.py
+    deps:
+    - path: models
+      md5: 86b2e0a1bf5e1c4f48e19b679edc64e0.dir
+      size: 21640677
+      nfiles: 21
+    - path: src/compare.py
+      md5: 98e6758ba9136935249d845a0a509894
+      size: 1028
+    outs:
+    - path: roc_curves.png
+      md5: e0abb41926cfc4942b7f4a137f2ab1d9
+      size: 36878
+  train@3:
     cmd: python src/train.py --model-class=TFDense --preprocessor=SKTfidfVectorizer
     deps:
     - path: data/prepared/SKTfidfVectorizer/labels.json
@@ -179,7 +265,7 @@ stages:
     - path: models/TFDense/train_metrics.json
       md5: ed531dc1fc6dff3d3136a0abbac424c7
       size: 32
-  test@2:
+  test@3:
     cmd: python src/test.py --model-class=TFDense --preprocessor=SKTfidfVectorizer
     deps:
     - path: models/TFDense/model.h5
@@ -195,7 +281,7 @@ stages:
     - path: models/TFDense/test_predictions.csv
       md5: 228259aa4f823aade0519f6fd3b727b9
       size: 19752
-  predict@2:
+  predict@3:
     cmd: python src/predict.py --model-class=TFDense
     deps:
     - path: data/raw/test.csv
@@ -214,17 +300,3 @@ stages:
     - path: data/predictions/TFDense_prediction.csv
       md5: d41d8cd98f00b204e9800998ecf8427e
       size: 0
-  compare:
-    cmd: python src/compare.py
-    deps:
-    - path: models
-      md5: 483a9b9a5ca82f7e8523eb1bd0936b2c.dir
-      size: 16275521
-      nfiles: 16
-    - path: src/compare.py
-      md5: 98e6758ba9136935249d845a0a509894
-      size: 1028
-    outs:
-    - path: roc_curves.png
-      md5: 59a3fafb0c7d3b3495a8ffc1461cc8ed
-      size: 33347
