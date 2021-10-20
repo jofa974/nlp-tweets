@@ -128,7 +128,7 @@ class Preprocessor(ABC):
         text = self.transcription_sad(text)
         text = self.transcription_smile(text)
         text = self.transcription_heart(text)
-        # text = self.correct_spelling(text)
+        text = self.correct_spelling(text)
         text = self.lemmatize(text)
         return text
 
