@@ -1,5 +1,6 @@
 import datetime
 
+import numpy as np
 import tensorflow as tf
 from src.models.abstract import Model
 
@@ -13,7 +14,7 @@ class TFlstm(Model):
     def summary(self):
         self.model.summary()
 
-    def make_model(self, vocab_size=0):
+    def make_model(self, vocab_size=0, embedding_matrix=None):
         input_shape = self.dataset.input_shape
         self.model = tf.keras.models.Sequential(
             [
@@ -24,6 +25,9 @@ class TFlstm(Model):
                     input_shape=[
                         input_shape,
                     ],
+                    embeddings_initializer=tf.keras.initializers.Constant(
+                        embedding_matrix
+                    ),
                 ),
                 tf.keras.layers.Dropout(0.2),
                 tf.keras.layers.LSTM(128, dropout=0.2),

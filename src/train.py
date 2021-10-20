@@ -2,6 +2,7 @@ import argparse
 import json
 from pathlib import Path
 
+import numpy as np
 from sklearn.metrics import f1_score
 
 from src.dataset import Dataset
@@ -25,11 +26,22 @@ def train(model_class, preprocessor_class):
     _, val_ds = ds.train_test_split()
 
     model = model_factory.get_model(model_class, dataset=ds)
-    model.make_model(vocab_size=preprocessor.vocab_size)
+    # TODO: refactor this
+    with open("ext/glove.twitter.27B.25d.txt", "r") as f:
+        glove = f.readlines()
 
-    model.summary()
-    model.fit(validation_data=val_ds)
+    embedding_dict = {}
 
+    for line in glove:
+        values = line.split()
+        word = values[0]
+        vectors = np.asarray(values[1:], "float32")
+        embedding_dict[word] = vectors
+        model.make_model(vocab_size=preprocessor.vocab_size)
+
+        model.summary()
+        model.fit(validation_data=val_ds)
+    ####
     Y_train_pred = model.predict_class(threshold=0.5)
     metrics = {"f1_score": f1_score(y_true=ds._labels, y_pred=Y_train_pred)}
 
