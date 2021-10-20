@@ -1,12 +1,12 @@
-from spellchecker import SpellChecker
 import re
-
 from abc import ABC, abstractmethod
 from pathlib import Path
 
 import joblib
 import spacy
 from spacy.lang.en.stop_words import STOP_WORDS
+from spellchecker import SpellChecker
+
 from .abbreviations import ABBREVIATIONS
 
 

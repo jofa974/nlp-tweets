@@ -218,8 +218,8 @@ stages:
     cmd: python src/compare.py
     deps:
     - path: models
-      md5: c34b3f01f7f5e064d6ab52a27577b9e9.dir
-      size: 106763870
+      md5: c41b6dd0ecb75c3851d0eb61f0efece2.dir
+      size: 106763876
       nfiles: 51
     - path: src/compare.py
       md5: 98e6758ba9136935249d845a0a509894

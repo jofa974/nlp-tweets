@@ -1,6 +1,7 @@
+import datetime
+
 import tensorflow as tf
 from src.models.abstract import Model
-import datetime
 
 
 class TFConv1D(Model):

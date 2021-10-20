@@ -1,9 +1,9 @@
-import pandas as pd
-import numpy as np
 import argparse
 import json
 from pathlib import Path
 
+import numpy as np
+import pandas as pd
 from sklearn.metrics import f1_score
 
 from src.dataset import Dataset
