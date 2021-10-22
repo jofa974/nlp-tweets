@@ -1,7 +1,6 @@
 import re
 
 import tensorflow as tf
-from logger import logger
 from src.logger import logger
 from src.preprocessors.abstract import Preprocessor
 

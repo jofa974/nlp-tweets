@@ -2,7 +2,7 @@ import re
 
 import numpy as np
 import tensorflow as tf
-from logger import logger
+from src.logger import logger
 from src.preprocessors.TFTokenizer import TFTokenizer
 from tqdm import tqdm
 
