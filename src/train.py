@@ -23,18 +23,23 @@ def train(model_class, preprocessor_class):
     ds.load_labels(data_path, stage="train")
 
     ds._features = preprocessor.apply(ds._features)
-    preprocessor.make_embedding_matrix()
 
     _, val_ds = ds.train_test_split()
 
     model = model_factory.get_model(model_class, dataset=ds)
-    model.make_model(
-        vocab_size=preprocessor.vocab_size,
-        output_dim=preprocessor.output_dim,
-        embeddings_initializer=tf.keras.initializers.Constant(
-            preprocessor.embedding_matrix
-        ),
-    )
+    # TODO: Fix this poor if condition
+    if preprocessor_class == "GloVeVectorizer":
+        model.make_model(
+            vocab_size=preprocessor.vocab_size,
+            output_dim=preprocessor.output_dim,
+            embeddings_initializer=tf.keras.initializers.Constant(
+                preprocessor.embedding_matrix
+            ),
+        )
+    else:
+        model.make_model(
+            vocab_size=preprocessor.vocab_size,
+        )
 
     model.summary()
     model.fit(validation_data=val_ds)

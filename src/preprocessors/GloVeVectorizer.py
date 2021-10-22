@@ -22,6 +22,11 @@ class GloVeVectorizer(TFTokenizer):
                 vectors = np.asarray(values[1:], "float32")
                 self.embedding_dict[word] = vectors
 
+    def apply(self, texts):
+        processed_text = super().apply(texts)
+        self.make_embedding_matrix()
+        return processed_text
+
     def make_embedding_matrix(self):
         """This method must be called after self.apply()"""
         logger.info("Making embedding matrix")
