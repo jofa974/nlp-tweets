@@ -158,8 +158,8 @@ stages:
       md5: ec07c88410f06d9854f74744b77490be
       size: 2511
     - path: src/models/TFlstm.py
-      md5: 56f787b70704da453ef0edb59ccd73a5
-      size: 2732
+      md5: 48827a831733eb2960aa2d04d2dd2a37
+      size: 2832
     - path: src/models/abstract.py
       md5: c1f903ca5687282956c8e7a9600b0349
       size: 1012
@@ -170,31 +170,31 @@ stages:
       params.yaml:
         TFlstm:
           lr: 0.0001
-          batch_size: 8
+          batch_size: 16
           epochs: 200
     outs:
     - path: models/TFlstm/model.h5
-      md5: 0e04457af3af59f0125d9e9e94779837
-      size: 60423264
+      md5: ffa95284095e794a0362b4d9a0b879bb
+      size: 60043104
     - path: models/TFlstm/train_metrics.json
-      md5: ad0e9b78af9aab5726eddcd7ee3b87bc
+      md5: 1d59fde0c2a26adfb37868cfb38da276
       size: 32
   test@2:
     cmd: python src/test.py --model-class=TFlstm --preprocessor=GloVeVectorizer
     deps:
     - path: models/TFlstm/model.h5
-      md5: 0e04457af3af59f0125d9e9e94779837
-      size: 60423264
+      md5: ffa95284095e794a0362b4d9a0b879bb
+      size: 60043104
     - path: src/test.py
       md5: 5b01ecf78c1c8ee026cb9ddae66fcb71
       size: 1712
     outs:
     - path: models/TFlstm/test_metrics.json
-      md5: 2448b9d3fdc00653d570640e0f2ce741
-      size: 32
+      md5: 046dacb9065ed133a28783138a6561b2
+      size: 31
     - path: models/TFlstm/test_predictions.csv
-      md5: 0ddb6036ce2b88ec9b1fd394fa4df5e2
-      size: 20798
+      md5: 50de4a62cf4e6720b411425d47a880a5
+      size: 19572
   predict@2:
     cmd: python src/predict.py --model-class=TFlstm
     deps:
@@ -202,11 +202,11 @@ stages:
       md5: ff248529f207ea164d73636e5b1b251d
       size: 420783
     - path: models/TFlstm/model.h5
-      md5: 0e04457af3af59f0125d9e9e94779837
-      size: 60423264
+      md5: ffa95284095e794a0362b4d9a0b879bb
+      size: 60043104
     - path: models/TFlstm/test_metrics.json
-      md5: 2448b9d3fdc00653d570640e0f2ce741
-      size: 32
+      md5: 046dacb9065ed133a28783138a6561b2
+      size: 31
     - path: src/predict.py
       md5: dcd79102586cf025166345b58fe5e825
       size: 605
@@ -218,16 +218,16 @@ stages:
     cmd: python src/compare.py
     deps:
     - path: models
-      md5: a9b6906d943b3e85b1d66b1b1e9bcb5c.dir
-      size: 276108105
-      nfiles: 222
+      md5: a8d3110d99f32a1c66c02a8a795ab93a.dir
+      size: 392027075
+      nfiles: 242
     - path: src/compare.py
       md5: 50f0a89d5a38510ace57c38c1e6ac2d7
       size: 1030
     outs:
     - path: roc_curves.png
-      md5: 82d7c7d46fb8fa183828e1d076125fdb
-      size: 38122
+      md5: a3bb196cf7c99fc47e98788b102646c4
+      size: 38971
   train@3:
     cmd: python src/train.py --model-class=TFDense --preprocessor=SKTfidfVectorizer
     deps:
