@@ -10,7 +10,7 @@ from tqdm import tqdm
 class GloVeVectorizer(TFTokenizer):
     def __init__(self):
         super().__init__()
-        self.glove_file = "ext/glove.twitter.27B.50d.txt"
+        self.glove_file = "ext/glove.twitter.27B.100d.txt"
         self.embedding_dict = {}
         with open(
             self.glove_file,
