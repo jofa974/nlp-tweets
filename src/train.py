@@ -3,6 +3,7 @@ import json
 from pathlib import Path
 
 import numpy as np
+import tensorflow as tf
 from sklearn.metrics import f1_score
 
 from src.dataset import Dataset
@@ -22,26 +23,22 @@ def train(model_class, preprocessor_class):
     ds.load_labels(data_path, stage="train")
 
     ds._features = preprocessor.apply(ds._features)
+    preprocessor.make_embedding_matrix()
 
     _, val_ds = ds.train_test_split()
 
     model = model_factory.get_model(model_class, dataset=ds)
-    # TODO: refactor this
-    with open("ext/glove.twitter.27B.25d.txt", "r") as f:
-        glove = f.readlines()
+    model.make_model(
+        vocab_size=preprocessor.vocab_size,
+        output_dim=preprocessor.output_dim,
+        embeddings_initializer=tf.keras.initializers.Constant(
+            preprocessor.embedding_matrix
+        ),
+    )
 
-    embedding_dict = {}
+    model.summary()
+    model.fit(validation_data=val_ds)
 
-    for line in glove:
-        values = line.split()
-        word = values[0]
-        vectors = np.asarray(values[1:], "float32")
-        embedding_dict[word] = vectors
-        model.make_model(vocab_size=preprocessor.vocab_size)
-
-        model.summary()
-        model.fit(validation_data=val_ds)
-    ####
     Y_train_pred = model.predict_class(threshold=0.5)
     metrics = {"f1_score": f1_score(y_true=ds._labels, y_pred=Y_train_pred)}
 

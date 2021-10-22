@@ -25,16 +25,15 @@ class GloVeVectorizer(TFTokenizer):
     def make_embedding_matrix(self):
         """This method must be called after self.apply()"""
         logger.info("Making embedding matrix")
-        self.embedding_matrix = np.zeros((self.vocab_size, self.output_dim))
+        self.embedding_matrix = np.zeros((self.vocab_size + 1, self.output_dim))
         for word, i in tqdm(self.word_index.items()):
             # TODO: check wtf is this "if"
-            if i > self.vocab_size:
+            if i > self.vocab_size + 1:
                 continue
 
             emb_vec = self.embedding_dict.get(word)
             if emb_vec is not None:
                 self.embedding_matrix[i] = emb_vec
-        self.embedding_matrix = tf.keras.initializers.Constant(self.embedding_matrix)
 
     @property
     def output_dim(self):

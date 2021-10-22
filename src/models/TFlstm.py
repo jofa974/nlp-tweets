@@ -14,20 +14,24 @@ class TFlstm(Model):
     def summary(self):
         self.model.summary()
 
-    def make_model(self, vocab_size=0, embedding_matrix=None):
+    def make_model(
+        self, vocab_size=0, output_dim=512, embeddings_initializer="uniform"
+    ):
+        trainable_embedding = True
+        if embeddings_initializer != "uniform":
+            trainable_embedding = False
         input_shape = self.dataset.input_shape
         self.model = tf.keras.models.Sequential(
             [
                 # Layer Input Word Embedding
                 tf.keras.layers.Embedding(
                     vocab_size + 1,
-                    output_dim=512,
+                    output_dim=output_dim,
                     input_shape=[
                         input_shape,
                     ],
-                    embeddings_initializer=tf.keras.initializers.Constant(
-                        embedding_matrix
-                    ),
+                    embeddings_initializer=embeddings_initializer,
+                    trainable=trainable_embedding,
                 ),
                 tf.keras.layers.Dropout(0.2),
                 tf.keras.layers.LSTM(128, dropout=0.2),
