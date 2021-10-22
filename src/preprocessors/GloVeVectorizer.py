@@ -1,3 +1,5 @@
+import re
+
 import numpy as np
 import tensorflow as tf
 from logger import logger
@@ -23,6 +25,7 @@ class GloVeVectorizer(TFTokenizer):
     def make_embedding_matrix(self):
         """This method must be called after self.apply()"""
         logger.info("Making embedding matrix")
+        self.embedding_matrix = np.zeros((self.vocab_size, self.output_dim))
         for word, i in tqdm(self.word_index.items()):
             # TODO: check wtf is this "if"
             if i > self.vocab_size:
