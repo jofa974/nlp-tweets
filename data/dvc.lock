@@ -10,17 +10,17 @@ stages:
       md5: 00dfdbef350577a0f037290a8a3be278
       size: 864
     - path: src/preprocessors/TFTokenizer.py
-      md5: c3126f2412871ee2e68d63531ebdd80b
-      size: 730
+      md5: f59c4157c25b4359041a9e1e8a01f718
+      size: 852
     - path: src/preprocessors/abstract.py
-      md5: 4a00dfc72d7b694ab16ea52229521284
+      md5: e34ca272549c0c5ce20e06206294ae1c
       size: 4376
     outs:
     - path: data/prepared/TFTokenizer/labels.json
       md5: 76e06f8528ff37525b0f13d4dc8d6d0e
       size: 22860
     - path: data/prepared/TFTokenizer/preproc.joblib
-      md5: e8b2d54bbf7eb0e4159445eb73d072b8
+      md5: a7da87ffb46119ea982ef2fd8e59da3b
       size: 541799
     - path: data/prepared/TFTokenizer/texts.json
       md5: db956128ffd8a325d8e1a290c8eda93d
@@ -38,14 +38,14 @@ stages:
       md5: 3b8b5bd05c8f54c5f092aad27b90fc33
       size: 615
     - path: src/preprocessors/abstract.py
-      md5: 4a00dfc72d7b694ab16ea52229521284
+      md5: e34ca272549c0c5ce20e06206294ae1c
       size: 4376
     outs:
     - path: data/prepared/SKCountVectorizer/labels.json
       md5: 76e06f8528ff37525b0f13d4dc8d6d0e
       size: 22860
     - path: data/prepared/SKCountVectorizer/preproc.joblib
-      md5: c01c0df08ca3aa074fc0f9ee5e878c89
+      md5: 61f1619a1cc1bd0c403817eb5c760592
       size: 177904
     - path: data/prepared/SKCountVectorizer/texts.json
       md5: db956128ffd8a325d8e1a290c8eda93d
@@ -63,15 +63,40 @@ stages:
       md5: cc3b741196ac214750ff1b373550540f
       size: 637
     - path: src/preprocessors/abstract.py
-      md5: 4a00dfc72d7b694ab16ea52229521284
+      md5: e34ca272549c0c5ce20e06206294ae1c
       size: 4376
     outs:
     - path: data/prepared/SKTfidfVectorizer/labels.json
       md5: 76e06f8528ff37525b0f13d4dc8d6d0e
       size: 22860
     - path: data/prepared/SKTfidfVectorizer/preproc.joblib
-      md5: 0ff26bedd3f52d5df5c62883c6aa4170
+      md5: 8608d3a50f12a90d37048298a125b575
       size: 395036
     - path: data/prepared/SKTfidfVectorizer/texts.json
+      md5: db956128ffd8a325d8e1a290c8eda93d
+      size: 517672
+  prepare_data@GloVeVectorizer:
+    cmd: python src/prepare.py --preprocessor=GloVeVectorizer
+    deps:
+    - path: data/raw/train.csv
+      md5: f147942c91d00d754503775341d13682
+      size: 987712
+    - path: src/prepare.py
+      md5: 00dfdbef350577a0f037290a8a3be278
+      size: 864
+    - path: src/preprocessors/GloVeVectorizer.py
+      md5: f7a5f9e7e86dc23f86eb47582b780f60
+      size: 1259
+    - path: src/preprocessors/abstract.py
+      md5: e34ca272549c0c5ce20e06206294ae1c
+      size: 4376
+    outs:
+    - path: data/prepared/GloVeVectorizer/labels.json
+      md5: 76e06f8528ff37525b0f13d4dc8d6d0e
+      size: 22860
+    - path: data/prepared/GloVeVectorizer/preproc.joblib
+      md5: 09117bb177f66578a41df9bac9eca079
+      size: 541799
+    - path: data/prepared/GloVeVectorizer/texts.json
       md5: db956128ffd8a325d8e1a290c8eda93d
       size: 517672
