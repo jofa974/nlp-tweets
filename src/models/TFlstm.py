@@ -34,14 +34,12 @@ class TFlstm(Model):
                     trainable=trainable_embedding,
                 ),
                 tf.keras.layers.SpatialDropout1D(0.2),
-                tf.keras.layers.Bidirectional(
-                    tf.keras.layers.LSTM(64, dropout=0.2, recurrent_dropout=0.2)
-                ),
+                tf.keras.layers.Bidirectional(tf.keras.layers.LSTM(64, dropout=0.2)),
                 # Layer Dense classique
-                tf.keras.layers.Dense(64, activation="relu"),
-                tf.keras.layers.Dropout(0.2),
-                tf.keras.layers.Dense(32, activation="relu"),
-                tf.keras.layers.Dropout(0.2),
+                # tf.keras.layers.Dense(64, activation="relu"),
+                # tf.keras.layers.Dropout(0.2),
+                # tf.keras.layers.Dense(32, activation="relu"),
+                # tf.keras.layers.Dropout(0.2),
                 tf.keras.layers.Dense(1, activation="sigmoid"),
             ]
         )
