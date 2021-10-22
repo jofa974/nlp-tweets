@@ -1,4 +1,3 @@
-import argparse
 from pathlib import Path
 
 import pandas as pd
@@ -6,7 +5,6 @@ from matplotlib import pyplot as plt
 from sklearn.metrics import roc_curve
 
 from src.logger import logger
-from src.models import model_factory
 
 
 def plot_roc(name, labels, predictions, axis, **kwargs):
