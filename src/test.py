@@ -33,6 +33,7 @@ def test(model_class, preprocessor_class):
     ds._features = preprocessor.apply(ds._features)
 
     model = model_factory.get_model(model_class, dataset=ds)
+
     model.load()
 
     predictions = model.predict()

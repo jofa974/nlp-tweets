@@ -34,3 +34,14 @@ class SKLogisticRegression(Model):
 
     def load(self):
         self.model = joblib.load(f"models/{self.name}/model.joblib")
+
+    @classmethod
+    def from_preprocessor(cls, preproc, dataset):
+        """Build an instance of this class based on a preprocessor data.
+
+        Args:
+            preproc (src.preprocessors.Preprocessor): A document Preprocessor class instance
+        """
+        instance = cls(dataset=dataset)
+        instance.make_model()
+        return instance

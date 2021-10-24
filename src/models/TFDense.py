@@ -60,3 +60,14 @@ class TFDense(Model):
 
     def load(self):
         self.model = tf.keras.models.load_model(f"models/{self.name}/model.h5")
+
+    @classmethod
+    def from_preprocessor(cls, preproc, dataset):
+        """Build an instance of this class based on a preprocessor data.
+
+        Args:
+            preproc (src.preprocessors.Preprocessor): A document Preprocessor class instance
+        """
+        instance = cls(dataset=dataset)
+        instance.make_model(preproc.vocab_size)
+        return instance

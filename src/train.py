@@ -26,15 +26,7 @@ def train(model_class, preprocessor_class):
 
     _, val_ds = ds.train_test_split()
 
-    model = model_factory.get_model(model_class, dataset=ds)
-    # TODO: Fix this poor if condition
-    if preprocessor_class == "GloVeVectorizer":
-        embedding_layer = preprocessor.make_tf_embedding_layer()
-        model.make_model(embedding_layer=embedding_layer)
-    else:
-        model.make_model(
-            vocab_size=preprocessor.vocab_size,
-        )
+    model = model_factory.get_model_from_preproc(model_class, preprocessor, dataset=ds)
 
     model.summary()
     model.fit(validation_data=val_ds)

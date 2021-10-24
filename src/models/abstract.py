@@ -1,4 +1,4 @@
-from abc import ABC, abstractmethod
+from abc import ABC, abstractclassmethod, abstractmethod
 
 import yaml
 
@@ -41,3 +41,12 @@ class Model(ABC):
     def get_params(self):
         with open("params.yaml", "r") as f:
             self.params = yaml.safe_load(f)[self.name]
+
+    @abstractclassmethod
+    def from_preprocessor(cls, preproc):
+        """Build an instance of this class based on a preprocessor data.
+
+        Args:
+            preproc (src.preprocessors.Preprocessor): A document Preprocessor class instance
+        """
+        raise NotImplementedError

@@ -4,14 +4,14 @@ SKLogisticRegression:
 TFConv1D:
   lr: 0.001
   batch_size: 16
-  epochs: 20
+  epochs: 2
 
 TFDense:
   lr: 0.001
   batch_size: 8
-  epochs: 20
+  epochs: 2
 
 TFlstm:
   lr: 0.001
   batch_size: 16
-  epochs: 20
+  epochs: 2

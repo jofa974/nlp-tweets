@@ -29,6 +29,12 @@ class ModelFactory:
             raise ValueError(format)
         return creator(*args, **kwargs)
 
+    def get_model_from_preproc(self, format, preprocessor, *args, **kwargs):
+        creator = self._creators.get(format)
+        if not creator:
+            raise ValueError(format)
+        return creator.from_preprocessor(preprocessor, *args, **kwargs)
+
 
 model_factory = ModelFactory()
 model_factory.register_model("SKLogisticRegression", SKLogisticRegression)
