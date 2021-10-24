@@ -22,15 +22,10 @@ class GloVeVectorizer(TFTokenizer):
                 vectors = np.asarray(values[1:], "float32")
                 self.embedding_dict[word] = vectors
 
-    def apply(self, texts):
-        processed_text = super().apply(texts)
-        self.make_embedding_matrix()
-        return processed_text
-
     def make_embedding_matrix(self):
         """This method must be called after self.apply()"""
         logger.info("Making embedding matrix")
-        self.embedding_matrix = np.zeros((self.vocab_size + 1, self.output_dim))
+        embedding_matrix = np.zeros((self.vocab_size + 1, self.output_dim))
         for word, i in tqdm(self.word_index.items()):
             # TODO: check wtf is this "if"
             if i > self.vocab_size + 1:
@@ -38,7 +33,8 @@ class GloVeVectorizer(TFTokenizer):
 
             emb_vec = self.embedding_dict.get(word)
             if emb_vec is not None:
-                self.embedding_matrix[i] = emb_vec
+                embedding_matrix[i] = emb_vec
+        return tf.keras.initializers.Constant(embedding_matrix)
 
     @property
     def output_dim(self):
