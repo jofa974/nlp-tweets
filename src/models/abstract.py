@@ -65,13 +65,12 @@ class TFModel(Model):
         raise NotImplementedError
 
     def fit(self, dataset, use_validation=False):
+        batched_train = dataset.make_tf_batched_data(self.params["batch_size"])
         if use_validation:
-            train_ds, val_ds = dataset.train_test_split()
-            batched_train = train_ds.make_tf_batched_data(self.params["batch_size"])
+            _, val_ds = dataset.train_test_split()
             batched_val = val_ds.make_tf_batched_data(self.params["batch_size"])
         else:
             batched_val = None
-            batched_train = dataset.make_tf_batched_data(self.params["batch_size"])
         log_dir = f"models/logs/{self.name}" + datetime.datetime.now().strftime(
             "%Y%m%d-%H%M%S"
         )
