@@ -32,15 +32,15 @@ def test(model_class, preprocessor_class):
 
     ds._features = preprocessor.apply(ds._features)
 
-    model = model_factory.get_model(model_class, dataset=ds)
+    model = model_factory.get_model(model_class)
 
     model.load()
 
-    predictions = model.predict()
+    predictions = model.predict(dataset=ds)
     df = pd.DataFrame({"y_pred": predictions, "y_true": ds._labels})
     df.to_csv(f"models/{model_class}/test_predictions.csv", index=False)
 
-    Y_test_pred = model.predict_class(threshold=0.5)
+    Y_test_pred = model.predict_class(dataset=ds, threshold=0.5)
 
     metrics = {"f1_score": f1_score(y_true=ds._labels, y_pred=Y_test_pred)}
 

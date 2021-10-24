@@ -1,20 +1,12 @@
-import datetime
-
 import tensorflow as tf
-from src.models.abstract import Model
+from src.models.abstract import TFModel
 
 
-class TFDense(Model):
-    def __init__(self, dataset=None):
-        super(TFDense, self).__init__(
-            dataset=dataset,
-        )
+class TFDense(TFModel):
+    def __init__(self):
+        super().__init__()
 
-    def summary(self):
-        self.model.summary()
-
-    def make_model(self, vocab_size=0):
-        input_shape = self.dataset.input_shape
+    def make_model(self, input_shape, vocab_size=0):
         self.model = tf.keras.models.Sequential(
             [
                 tf.keras.layers.Dense(64, input_shape=[input_shape], activation="relu"),
@@ -29,45 +21,3 @@ class TFDense(Model):
             loss=tf.keras.losses.BinaryCrossentropy(),
             metrics=["accuracy"],
         )
-
-    def fit(self, validation_data=None):
-        batched_data = self.dataset.make_tf_batched_data(self.params["batch_size"])
-        if validation_data:
-            batched_val = validation_data.make_tf_batched_data(
-                self.params["batch_size"]
-            )
-        else:
-            batched_val = None
-        log_dir = f"models/logs/{self.name}" + datetime.datetime.now().strftime(
-            "%Y%m%d-%H%M%S"
-        )
-        tensorboard_callback = tf.keras.callbacks.TensorBoard(
-            log_dir=log_dir, histogram_freq=1
-        )
-        self.model.fit(
-            batched_data,
-            epochs=self.params["epochs"],
-            validation_data=batched_val,
-            callbacks=[tensorboard_callback],
-        )
-
-    def predict(self):
-        predictions = self.model.predict(self.dataset._features)
-        return tf.squeeze(predictions)
-
-    def save(self):
-        self.model.save(f"models/{self.name}/model.h5")
-
-    def load(self):
-        self.model = tf.keras.models.load_model(f"models/{self.name}/model.h5")
-
-    @classmethod
-    def from_preprocessor(cls, preproc, dataset):
-        """Build an instance of this class based on a preprocessor data.
-
-        Args:
-            preproc (src.preprocessors.Preprocessor): A document Preprocessor class instance
-        """
-        instance = cls(dataset=dataset)
-        instance.make_model(preproc.vocab_size)
-        return instance

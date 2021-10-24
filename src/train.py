@@ -24,14 +24,14 @@ def train(model_class, preprocessor_class):
 
     ds._features = preprocessor.apply(ds._features)
 
-    _, val_ds = ds.train_test_split()
-
-    model = model_factory.get_model_from_preproc(model_class, preprocessor, dataset=ds)
+    model = model_factory.get_model_from_preproc(
+        model_class, preprocessor, input_shape=ds.input_shape
+    )
 
     model.summary()
-    model.fit(validation_data=val_ds)
+    model.fit(ds, use_validation=True)
 
-    Y_train_pred = model.predict_class(threshold=0.5)
+    Y_train_pred = model.predict_class(dataset=ds, threshold=0.5)
     metrics = {"f1_score": f1_score(y_true=ds._labels, y_pred=Y_train_pred)}
 
     with open(f"models/{model_class}/train_metrics.json", "w") as f:
