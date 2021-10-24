@@ -12,12 +12,12 @@ class TFConv1D(TFModel):
                 # Layer Input Word Embedding
                 tf.keras.layers.Embedding(
                     vocab_size + 1,
-                    output_dim=32,
+                    output_dim=256,
                     input_shape=[
                         input_shape,
                     ],
                 ),
-                tf.keras.layers.Conv1D(16, 3, activation="relu"),
+                tf.keras.layers.Conv1D(512, 3, activation="relu"),
                 # Flatten
                 tf.keras.layers.Flatten(),
                 # Layer Dense classique
