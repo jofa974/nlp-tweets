@@ -43,3 +43,13 @@ class GloVeVectorizer(TFTokenizer):
     @property
     def output_dim(self):
         return int(re.findall("(\d+)d", self.glove_file)[0])
+
+    def make_tf_embedding_layer(self):
+        """Constructs the Embedding layer for a TF model."""
+        layer = tf.keras.layers.Embedding(
+            self.vocab_size + 1,
+            output_dim=self.output_dim,
+            embeddings_initializer=self.make_embedding_matrix(),
+            trainable=False,
+        )
+        return layer

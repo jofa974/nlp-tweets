@@ -29,13 +29,8 @@ def train(model_class, preprocessor_class):
     model = model_factory.get_model(model_class, dataset=ds)
     # TODO: Fix this poor if condition
     if preprocessor_class == "GloVeVectorizer":
-        model.make_model(
-            vocab_size=preprocessor.vocab_size,
-            output_dim=preprocessor.output_dim,
-            embeddings_initializer=tf.keras.initializers.Constant(
-                preprocessor.embedding_matrix
-            ),
-        )
+        embedding_layer = preprocessor.make_tf_embedding_layer()
+        model.make_model(embedding_layer=embedding_layer)
     else:
         model.make_model(
             vocab_size=preprocessor.vocab_size,

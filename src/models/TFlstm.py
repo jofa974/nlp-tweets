@@ -14,27 +14,24 @@ class TFlstm(Model):
     def summary(self):
         self.model.summary()
 
-    def make_model(
-        self, vocab_size=0, output_dim=512, embeddings_initializer="uniform"
-    ):
-        trainable_embedding = True
-        if embeddings_initializer != "uniform":
-            trainable_embedding = False
+    def make_model(self, embedding_layer):
+        """Constructs and compiles a DNN model.
+
+        Args:
+            embedding_layer (tf.keras.layers.Embedding): an embedding layer produced by a Preprocessor object.
+        """
         input_shape = self.dataset.input_shape
         self.model = tf.keras.models.Sequential(
             [
-                # Layer Input Word Embedding
-                tf.keras.layers.Embedding(
-                    vocab_size + 1,
-                    output_dim=output_dim,
+                tf.keras.layers.InputLayer(
                     input_shape=[
                         input_shape,
-                    ],
-                    embeddings_initializer=embeddings_initializer,
-                    trainable=trainable_embedding,
+                    ]
                 ),
+                # Layer Input Word Embedding
+                embedding_layer,
                 tf.keras.layers.SpatialDropout1D(0.2),
-                tf.keras.layers.Bidirectional(tf.keras.layers.LSTM(1024, dropout=0.2)),
+                tf.keras.layers.Bidirectional(tf.keras.layers.LSTM(64, dropout=0.2)),
                 # Layer Dense classique
                 # tf.keras.layers.Dense(64, activation="relu"),
                 # tf.keras.layers.Dropout(0.2),
