@@ -6,7 +6,6 @@ import tensorflow as tf
 from src.models.SKLogisticRegression import SKLogisticRegression
 from src.models.TFConv1D import TFConv1D
 from src.models.TFDense import TFDense
-from src.models.TFexample import TFexample
 from src.models.TFlstm import TFlstm
 
 SEED = 42
@@ -42,4 +41,3 @@ model_factory.register_model("SKLogisticRegression", SKLogisticRegression)
 model_factory.register_model("TFConv1D", TFConv1D)
 model_factory.register_model("TFDense", TFDense)
 model_factory.register_model("TFlstm", TFlstm)
-model_factory.register_model("TFexample", TFexample)
