@@ -23,18 +23,15 @@ class TFlstm(TFModel):
                 ),
                 # Layer Input Word Embedding
                 embedding_layer,
-                tf.keras.layers.SpatialDropout1D(0.2),
-                tf.keras.layers.Bidirectional(tf.keras.layers.LSTM(64, dropout=0.2)),
-                # Layer Dense classique
-                # tf.keras.layers.Dense(64, activation="relu"),
-                # tf.keras.layers.Dropout(0.2),
-                # tf.keras.layers.Dense(32, activation="relu"),
-                # tf.keras.layers.Dropout(0.2),
+                tf.keras.layers.Conv1D(16, 3, activation="relu"),
+                tf.keras.layers.Bidirectional(tf.keras.layers.LSTM(32, dropout=0.4)),
+                tf.keras.layers.Flatten(),
                 tf.keras.layers.Dense(1, activation="sigmoid"),
             ]
         )
+        lr = self.lr_scheduler(self.params["lr"])
         self.model.compile(
-            optimizer=tf.keras.optimizers.Adam(learning_rate=self.params["lr"]),
+            optimizer=tf.keras.optimizers.Adam(learning_rate=lr),
             loss=tf.keras.losses.BinaryCrossentropy(),
             metrics=["accuracy"],
         )

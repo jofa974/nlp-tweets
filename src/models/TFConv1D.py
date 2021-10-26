@@ -12,12 +12,12 @@ class TFConv1D(TFModel):
                 # Layer Input Word Embedding
                 tf.keras.layers.Embedding(
                     vocab_size + 1,
-                    output_dim=256,
+                    output_dim=64,
                     input_shape=[
                         input_shape,
                     ],
                 ),
-                tf.keras.layers.Conv1D(512, 3, activation="relu"),
+                tf.keras.layers.Conv1D(16, 3, activation="relu"),
                 # Flatten
                 tf.keras.layers.Flatten(),
                 # Layer Dense classique
@@ -28,8 +28,9 @@ class TFConv1D(TFModel):
                 tf.keras.layers.Dense(1, activation="sigmoid"),
             ]
         )
+        lr = self.lr_scheduler(self.params["lr"])
         self.model.compile(
-            optimizer=tf.keras.optimizers.Adam(learning_rate=self.params["lr"]),
+            optimizer=tf.keras.optimizers.Adam(learning_rate=lr),
             loss=tf.keras.losses.BinaryCrossentropy(),
             metrics=["accuracy"],
         )

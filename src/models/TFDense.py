@@ -16,8 +16,9 @@ class TFDense(TFModel):
                 tf.keras.layers.Dense(1, activation="sigmoid"),
             ]
         )
+        lr = self.lr_scheduler(self.params["lr"])
         self.model.compile(
-            optimizer=tf.keras.optimizers.Adam(learning_rate=self.params["lr"]),
+            optimizer=tf.keras.optimizers.Adam(learning_rate=lr),
             loss=tf.keras.losses.BinaryCrossentropy(),
             metrics=["accuracy"],
         )

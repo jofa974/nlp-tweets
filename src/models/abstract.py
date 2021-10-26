@@ -82,7 +82,7 @@ class TFModel(Model):
             batched_train,
             epochs=self.params["epochs"],
             validation_data=batched_val,
-            callbacks=[tensorboard_callback],
+            callbacks=[tensorboard_callback, LearningRateLogger()],
         )
 
     def predict(self, dataset):
@@ -105,3 +105,19 @@ class TFModel(Model):
         instance = cls()
         instance.make_model(input_shape, preproc.vocab_size)
         return instance
+
+    def lr_scheduler(self, initial_learning_rate):
+        return tf.keras.optimizers.schedules.ExponentialDecay(
+            initial_learning_rate, decay_steps=100, decay_rate=0.96, staircase=True
+        )
+
+
+class LearningRateLogger(tf.keras.callbacks.Callback):
+    def __init__(self):
+        super().__init__()
+        self._supports_tf_logs = True
+
+    def on_epoch_end(self, epoch, logs=None):
+        if logs is None or "learning_rate" in logs:
+            return
+        logs["learning_rate"] = self.model.optimizer.lr
