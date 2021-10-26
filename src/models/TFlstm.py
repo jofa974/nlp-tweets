@@ -23,8 +23,14 @@ class TFlstm(TFModel):
                 ),
                 # Layer Input Word Embedding
                 embedding_layer,
+                tf.keras.layers.Bidirectional(
+                    tf.keras.layers.LSTM(32, dropout=0.4, return_sequences=True)
+                ),
                 tf.keras.layers.Conv1D(16, 3, activation="relu"),
-                tf.keras.layers.Bidirectional(tf.keras.layers.LSTM(32, dropout=0.4)),
+                tf.keras.layers.Bidirectional(
+                    tf.keras.layers.LSTM(32, dropout=0.4, return_sequences=True)
+                ),
+                tf.keras.layers.LSTM(32, dropout=0.4),
                 tf.keras.layers.Flatten(),
                 tf.keras.layers.Dense(1, activation="sigmoid"),
             ]
