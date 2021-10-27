@@ -108,7 +108,7 @@ class TFModel(Model):
 
     def lr_scheduler(self, initial_learning_rate):
         return tf.keras.optimizers.schedules.ExponentialDecay(
-            initial_learning_rate, decay_steps=100, decay_rate=0.96, staircase=True
+            initial_learning_rate, decay_steps=100, decay_rate=0.97, staircase=True
         )
 
 
