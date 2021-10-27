@@ -53,7 +53,7 @@ class Preprocessor(ABC):
     def remove_mention(text):
         # Remove @ and mention, replace by USER
         at = re.compile(r"@\S+")
-        return at.sub(r"USER", text)
+        return at.sub(r" USER ", text)
 
     @staticmethod
     def remove_emoji(text):
@@ -68,7 +68,7 @@ class Preprocessor(ABC):
             "]+",
             flags=re.UNICODE,
         )
-        return emoji_pattern.sub(r"EMOJI", text)
+        return emoji_pattern.sub(r" EMOJI ", text)
 
     @staticmethod
     def remove_url(text):
@@ -90,7 +90,7 @@ class Preprocessor(ABC):
     def remove_number(text):
         # Remove numbers, replace it by NUMBER
         num = re.compile(r"[-+]?[.\d]*[\d]+[:,.\d]*")
-        return num.sub(r"NUMBER", text)
+        return num.sub(r" NUMBER ", text)
 
     @staticmethod
     def transcription_sad(text):
@@ -98,19 +98,19 @@ class Preprocessor(ABC):
         eyes = "[8:=;]"
         nose = "['`\-]"
         smiley = re.compile(r"[8:=;][\'\-]?[(\\/]")
-        return smiley.sub(r"SADFACE", text)
+        return smiley.sub(r" SAD FACE ", text)
 
     @staticmethod
     def transcription_smile(text):
         # Replace some smileys with SMILE
         smiley = re.compile(r"[8:=;][\'\-]?[)dDp]")
-        return smiley.sub(r"SMILE", text)
+        return smiley.sub(r" SMILE ", text)
 
     @staticmethod
     def transcription_heart(text):
         # Replace <3 with HEART
         heart = re.compile(r"<3")
-        return heart.sub(r"HEART", text)
+        return heart.sub(r" HEART ", text)
 
     @staticmethod
     def replace_abbrev(text):

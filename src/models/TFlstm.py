@@ -1,74 +1,57 @@
-import datetime
-
+import numpy as np
 import tensorflow as tf
-from src.models.abstract import Model
+from src.models.abstract import TFModel
 
 
-class TFlstm(Model):
-    def __init__(self, dataset=None):
-        super(TFlstm, self).__init__(
-            dataset=dataset,
-        )
+class TFlstm(TFModel):
+    def __init__(self):
+        super().__init__()
 
-    def summary(self):
-        self.model.summary()
+    def make_model(self, input_shape, embedding_layer):
+        """Constructs and compiles a DNN model.
 
-    def make_model(self, vocab_size=0):
-        input_shape = self.dataset.input_shape
+        Args:
+            input_shape (int): Input shape
+            embedding_layer (tf.keras.layers.Embedding): an embedding layer produced by a Preprocessor object.
+        """
         self.model = tf.keras.models.Sequential(
             [
-                # Layer Input Word Embedding
-                tf.keras.layers.Embedding(
-                    vocab_size + 1,
-                    output_dim=512,
+                tf.keras.layers.InputLayer(
                     input_shape=[
                         input_shape,
-                    ],
+                    ]
                 ),
-                tf.keras.layers.Dropout(0.2),
-                tf.keras.layers.LSTM(128, dropout=0.2),
-                # Layer Dense classique
-                tf.keras.layers.Dense(64, activation="relu"),
-                tf.keras.layers.Dropout(0.2),
-                tf.keras.layers.Dense(32, activation="relu"),
-                tf.keras.layers.Dropout(0.2),
+                # Layer Input Word Embedding
+                embedding_layer,
+                tf.keras.layers.Bidirectional(
+                    tf.keras.layers.LSTM(128, dropout=0.4, return_sequences=True)
+                ),
+                tf.keras.layers.Conv1D(64, 5, activation="relu"),
+                tf.keras.layers.Bidirectional(
+                    tf.keras.layers.LSTM(128, dropout=0.4, return_sequences=True)
+                ),
+                tf.keras.layers.LSTM(64, dropout=0.4),
+                tf.keras.layers.Flatten(),
                 tf.keras.layers.Dense(1, activation="sigmoid"),
             ]
         )
+        lr = self.lr_scheduler(self.params["lr"])
         self.model.compile(
-            optimizer=tf.keras.optimizers.Adam(learning_rate=self.params["lr"]),
+            optimizer=tf.keras.optimizers.Adam(learning_rate=lr),
             loss=tf.keras.losses.BinaryCrossentropy(),
             metrics=["accuracy"],
         )
 
-    def fit(self, validation_data=None):
-        batched_data = self.dataset.make_tf_batched_data(self.params["batch_size"])
-        if validation_data:
-            batched_val = validation_data.make_tf_batched_data(
-                self.params["batch_size"]
-            )
-        else:
-            batched_val = None
+    @classmethod
+    def from_preprocessor(cls, preproc, input_shape):
+        """Build an instance of this class based on a preprocessor data.
 
-        log_dir = f"models/logs/{self.name}" + datetime.datetime.now().strftime(
-            "%Y%m%d-%H%M%S"
+        Args:
+            preproc (src.preprocessors.Preprocessor): A document Preprocessor class instance
+            input_shape (int): the input shape
+        """
+        instance = cls()
+        instance.make_model(
+            input_shape=input_shape, embedding_layer=preproc.make_tf_embedding_layer()
         )
-        tensorboard_callback = tf.keras.callbacks.TensorBoard(
-            log_dir=log_dir, histogram_freq=1
-        )
-        self.model.fit(
-            batched_data,
-            epochs=self.params["epochs"],
-            validation_data=batched_val,
-            callbacks=[tensorboard_callback],
-        )
-
-    def predict(self):
-        predictions = self.model.predict(self.dataset._features)
-        return tf.squeeze(predictions)
-
-    def save(self):
-        self.model.save(f"models/{self.name}/model.h5")
-
-    def load(self):
-        self.model = tf.keras.models.load_model(f"models/{self.name}/model.h5")
+        return instance

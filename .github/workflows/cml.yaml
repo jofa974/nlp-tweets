@@ -11,30 +11,31 @@ jobs:
           REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GDRIVE_CREDENTIALS_DATA: ${{ secrets.GDRIVE_CREDENTIALS_DATA }}
         run: |
-          # Install requirements
-          pip install -r requirements.txt
-          pip install -e .
+          echo "disabled"
+          # # Install requirements
+          # pip install -r requirements.txt
+          # pip install -e .
 
-          # Pull data & run-cache from gdrive and reproduce pipeline
-          dvc pull data/raw --run-cache
-          dvc repro
+          # # Pull data & run-cache from gdrive and reproduce pipeline
+          # dvc pull data/raw --run-cache
+          # dvc repro
 
-          # Report metrics
-          echo "## Metrics" >> report.md
-          git fetch --prune
-          dvc metrics diff master --show-md >> report.md
+          # # Report metrics
+          # echo "## Metrics" >> report.md
+          # git fetch --prune
+          # dvc metrics diff master --show-md >> report.md
 
-          echo "## ROC curves" >> report.md
-          cml-publish ./roc_curves.png --md >> report.md
+          # echo "## ROC curves" >> report.md
+          # cml-publish ./roc_curves.png --md >> report.md
 
-          # # Publish confusion matrix diff
-          # echo "## Plots" >> report.md
-          # echo "### Class confusions" >> report.md
-          # dvc plots diff --target classes.csv --template confusion -x actual -y predicted --show-vega master > vega.json
-          # vl2png vega.json -s 1.5 | cml-publish --md >> report.md
-          # # Publish regularization function diff
-          # echo "### Effects of regularization" >> report.md
-          # dvc plots diff --target estimators.csv -x Regularization --show-vega master > vega.json
-          # vl2png vega.json -s 1.5 | cml-publish --md >> report.md
+          # # # Publish confusion matrix diff
+          # # echo "## Plots" >> report.md
+          # # echo "### Class confusions" >> report.md
+          # # dvc plots diff --target classes.csv --template confusion -x actual -y predicted --show-vega master > vega.json
+          # # vl2png vega.json -s 1.5 | cml-publish --md >> report.md
+          # # # Publish regularization function diff
+          # # echo "### Effects of regularization" >> report.md
+          # # dvc plots diff --target estimators.csv -x Regularization --show-vega master > vega.json
+          # # vl2png vega.json -s 1.5 | cml-publish --md >> report.md
 
-          cml-send-comment report.md
+          # cml-send-comment report.md

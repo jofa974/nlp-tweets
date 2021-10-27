@@ -1,3 +1,5 @@
+import re
+
 import tensorflow as tf
 from src.logger import logger
 from src.preprocessors.abstract import Preprocessor
@@ -22,3 +24,7 @@ class TFTokenizer(Preprocessor):
     @property
     def vocab_size(self):
         return len(self.preprocessor.word_index)
+
+    @property
+    def word_index(self):
+        return self.preprocessor.word_index

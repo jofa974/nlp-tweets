@@ -7,7 +7,7 @@ stages:
       - preprocessor: TFTokenizer
         model_class: TFConv1D
         output: model.h5
-      - preprocessor: TFTokenizer
+      - preprocessor: GloVeVectorizer
         model_class: TFlstm
         output: model.h5
       - preprocessor: SKTfidfVectorizer
@@ -39,7 +39,7 @@ stages:
       - preprocessor: TFTokenizer
         model_class: TFConv1D
         file: model.h5
-      - preprocessor: TFTokenizer
+      - preprocessor: GloVeVectorizer
         model_class: TFlstm
         file: model.h5
       - preprocessor: SKTfidfVectorizer

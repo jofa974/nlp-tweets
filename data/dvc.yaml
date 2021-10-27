@@ -4,6 +4,7 @@ stages:
       - SKCountVectorizer
       - TFTokenizer
       - SKTfidfVectorizer
+      - GloVeVectorizer
     do:
       wdir: ../
       cmd: python src/prepare.py --preprocessor=${item}

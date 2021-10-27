@@ -1,17 +1,19 @@
 SKLogisticRegression:
-  max_iter: 1000
-  
+  max_iter: 100
+
 TFConv1D:
-  lr: 0.001
+  lr: 0.0001
   batch_size: 16
-  epochs: 20
+  epochs: 60
 
 TFDense:
-  lr: 0.001
-  batch_size: 8
-  epochs: 20
+  lr: 0.0001
+  batch_size: 16
+  epochs: 60
 
 TFlstm:
   lr: 0.0001
-  batch_size: 128
-  epochs: 200
+  batch_size: 16
+  epochs: 60
+
+
