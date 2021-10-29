@@ -13,8 +13,6 @@ def plot_roc(name, labels, predictions, axis, **kwargs):
     axis.plot(100 * fp, 100 * tp, label=name, linewidth=2, **kwargs)
     axis.set_xlabel("False positives [%]")
     axis.set_ylabel("True positives [%]")
-    # axis.set_xlim([-0.5, 20])
-    # axis.set_ylim([80, 100.5])
     axis.grid(True)
     axis.set_aspect("equal")
     return axis
@@ -29,9 +27,11 @@ def compare():
             f"Model: {prediction_file.parent.name}", df["y_true"], df["y_pred"], axis=ax
         )
     plt.legend()
-    fig.savefig("roc_curves.png")
+    roc_file = "roc_curves.png"
+    fig.savefig(roc_file)
+    logger.info(f"ROC curves saved in {roc_file}")
 
 
 if __name__ == "__main__":
-    logger.info("I am comparing !")
+    logger.info("Comparing the models...")
     compare()
