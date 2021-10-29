@@ -11,22 +11,23 @@ jobs:
           REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GDRIVE_CREDENTIALS_DATA: ${{ secrets.GDRIVE_CREDENTIALS_DATA }}
         run: |
-          echo "disabled"
           # # Install requirements
-          # pip install -r requirements.txt
-          # pip install -e .
-
+          pip install -r requirements.txt
+          pip install -e .
+          
+          pytest
           # # Pull data & run-cache from gdrive and reproduce pipeline
-          # dvc pull data/raw --run-cache
-          # dvc repro
+          # # dvc pull data/raw --run-cache
+          
+          dvc repro
 
           # # Report metrics
-          # echo "## Metrics" >> report.md
-          # git fetch --prune
-          # dvc metrics diff master --show-md >> report.md
+          echo "## Metrics" >> report.md
+          git fetch --prune
+          dvc metrics diff master --show-md >> report.md
 
-          # echo "## ROC curves" >> report.md
-          # cml-publish ./roc_curves.png --md >> report.md
+          echo "## ROC curves" >> report.md
+          cml-publish ./roc_curves.png --md >> report.md
 
           # # # Publish confusion matrix diff
           # # echo "## Plots" >> report.md
