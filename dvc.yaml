@@ -1,4 +1,29 @@
 stages:
+  fetch_data:
+    cmd: ./src/fetch_data.sh && ./src/fetch_glove.sh
+    deps:
+      - src/fetch_data.sh
+      - src/fetch_glove.sh
+    outs:
+      - data/raw
+      - ext/
+  prepare_data:
+    foreach:
+      - SKCountVectorizer
+      - TFTokenizer
+      - SKTfidfVectorizer
+      - GloVeVectorizer
+    do:
+      cmd: python src/prepare.py --preprocessor=${item}
+      deps:
+        - data/raw/train.csv
+        - src/prepare.py
+        - src/preprocessors/abstract.py
+        - src/preprocessors/${item}.py
+      outs:
+        - data/prepared/${item}/texts.json
+        - data/prepared/${item}/labels.json
+        - data/prepared/${item}/preproc.joblib
   train:
     foreach:
       - preprocessor: SKCountVectorizer
