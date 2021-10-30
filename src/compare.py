@@ -27,6 +27,7 @@ def compare():
             f"Model: {prediction_file.parent.name}", df["y_true"], df["y_pred"], axis=ax
         )
     plt.legend()
+
     roc_file = "roc_curves.png"
     fig.savefig(roc_file)
     logger.info(f"ROC curves saved in {roc_file}")

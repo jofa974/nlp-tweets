@@ -41,7 +41,7 @@ A new model can be implemented as follows:
 
 ### ROC curves on test data
 
-![ROC curves](roc_curves.png)
+![ROC curves](figures/latest_roc_curves.png)
 
 ### Scores on test data
 
