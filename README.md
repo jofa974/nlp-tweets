@@ -42,3 +42,15 @@ A new model can be implemented as follows:
 ### ROC curves on test data
 
 ![ROC curves](roc_curves.png)
+
+### Scores on test data
+
+F1 scores obtained with `threshold = 0.5`:
+
+| Path                                           | f1_score   |
+|------------------------------------------------|------------|
+| models/TFlstm/test_metrics.json                | 0.76274    |
+| models/SKLogisticRegression/test_metrics.json  | 0.74551    |
+| models/TFDense/test_metrics.json               | 0.71746    |
+| models/TFConv1D/test_metrics.json              | 0.70093    |
+
