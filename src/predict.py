@@ -23,7 +23,7 @@ def predict(model_class, preprocessor_class):
     model = model_factory.get_model(model_class)
     model.load()
 
-    predictions = model.predict(dataset=ds_test)
+    predictions = model.predict_class(dataset=ds_test, threshold=0.5)
     df = pd.DataFrame({"id": ds_test._id, "target": predictions})
     df.to_csv(f"models/{model_class}/submission.csv", index=False)
 

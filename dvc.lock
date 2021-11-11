@@ -64,12 +64,12 @@ stages:
       md5: dac4213d4cb35b21ff504d053255775c
       size: 32
     - path: src/predict.py
-      md5: 9befb647389941cd8370434ed46dac30
-      size: 1399
+      md5: 1930237b7e60d5e6d7d4c061c3cb1516
+      size: 1420
     outs:
     - path: models/SKLogisticRegression/submission.csv
-      md5: c9cf59473f29ad2b894f6e8f256ac437
-      size: 79675
+      md5: f7ff51dc2818fc191914658aa9a69d6f
+      size: 22746
   train@1:
     cmd: python src/train.py --model-class=TFConv1D --preprocessor=TFTokenizer
     deps:
@@ -136,12 +136,12 @@ stages:
       md5: d690be23ae6b4c9919b87b3a45bf2dd8
       size: 32
     - path: src/predict.py
-      md5: 9befb647389941cd8370434ed46dac30
-      size: 1399
+      md5: 1930237b7e60d5e6d7d4c061c3cb1516
+      size: 1420
     outs:
     - path: models/TFConv1D/submission.csv
-      md5: 017a2a46ec49f037a509ee47bf461e99
-      size: 53313
+      md5: 2b930b23d6cf9d8cb5057cbc291a9f4e
+      size: 22746
   train@2:
     cmd: python src/train.py --model-class=TFlstm --preprocessor=GloVeVectorizer
     deps:
@@ -208,18 +208,18 @@ stages:
       md5: d77828b20f95db4b9271b643404d9fda
       size: 32
     - path: src/predict.py
-      md5: 9befb647389941cd8370434ed46dac30
-      size: 1399
+      md5: 1930237b7e60d5e6d7d4c061c3cb1516
+      size: 1420
     outs:
     - path: models/TFlstm/submission.csv
-      md5: 779633aa0a0c15d5d9ce060b5840d501
-      size: 50926
+      md5: 5c0a98c91e9190fd6027c82c6bf2d889
+      size: 22746
   compare:
     cmd: python src/compare.py
     deps:
     - path: models
-      md5: 65c434517a12edebd2ae904687c6b982.dir
-      size: 291955156
+      md5: b2e0ac491c5031574da4cd56881e4198.dir
+      size: 291809961
       nfiles: 95
     - path: src/compare.py
       md5: 7982b40609f0551cc08ca3c471dd0357
@@ -294,12 +294,12 @@ stages:
       md5: e27ae4e665e55a75161182a171503c3f
       size: 32
     - path: src/predict.py
-      md5: 9befb647389941cd8370434ed46dac30
-      size: 1399
+      md5: 1930237b7e60d5e6d7d4c061c3cb1516
+      size: 1420
     outs:
     - path: models/TFDense/submission.csv
-      md5: 16e20172321a8c245e42ee02bb5f57c5
-      size: 52265
+      md5: 55a482ee8c4f611210e2fd1095130359
+      size: 22746
   fetch_data:
     cmd: ./src/fetch_data.sh && ./src/fetch_glove.sh
     deps:
