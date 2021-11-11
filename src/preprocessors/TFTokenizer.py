@@ -17,7 +17,7 @@ class TFTokenizer(Preprocessor):
     def apply(self, texts):
         processed_text = self.preprocessor.texts_to_sequences(texts)
         processed_text = tf.keras.preprocessing.sequence.pad_sequences(
-            processed_text, padding="post"
+            processed_text, padding="post", maxlen=30, truncating="post"
         )
         return processed_text
 

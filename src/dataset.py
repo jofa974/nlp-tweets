@@ -25,8 +25,10 @@ class Dataset:
 
     def load_raw_to_df(self, raw_file="data/raw/train.csv"):
         df = pd.read_csv(str(raw_file))
+        self._id = df["id"]
         self._features = df["text"]
-        self._labels = df["target"]
+        if "target" in df.columns:
+            self._labels = df["target"]
 
     def prepare_features(self, preprocessor):
         tqdm.pandas()

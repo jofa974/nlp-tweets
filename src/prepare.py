@@ -18,6 +18,7 @@ if __name__ == "__main__":
     )
     args = parser.parse_args()
 
+    # Training data
     ds = Dataset()
     ds.load_raw_to_df(raw_file="data/raw/train.csv")
 

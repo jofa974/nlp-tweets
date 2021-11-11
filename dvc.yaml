@@ -83,23 +83,27 @@ stages:
 
   predict:
     foreach:
-      - model_class: SKLogisticRegression
+      - preprocessor: SKCountVectorizer
+        model_class: SKLogisticRegression
         file: model.joblib
-      - model_class: TFConv1D
+      - preprocessor: TFTokenizer
+        model_class: TFConv1D
         file: model.h5
-      - model_class: TFlstm
+      - preprocessor: GloVeVectorizer
+        model_class: TFlstm
         file: model.h5
-      - model_class: TFDense
+      - preprocessor: SKTfidfVectorizer
+        model_class: TFDense
         file: model.h5
     do:
-      cmd: python src/predict.py --model-class=${item.model_class}
+      cmd: python src/predict.py --model-class=${item.model_class} --preprocessor=${item.preprocessor}
       deps:
         - data/raw/test.csv
         - models/${item.model_class}/test_metrics.json
         - src/predict.py
         - models/${item.model_class}/${item.file}
       outs:
-        - data/predictions/${item.model_class}_prediction.csv
+        - models/${item.model_class}/submission.csv
 
   compare:
     cmd: python src/compare.py
