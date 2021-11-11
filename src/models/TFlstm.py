@@ -1,5 +1,6 @@
 import numpy as np
 import tensorflow as tf
+import tensorflow_addons as tfa
 from src.models.abstract import TFModel
 
 
@@ -23,9 +24,11 @@ class TFlstm(TFModel):
                 ),
                 # Layer Input Word Embedding
                 embedding_layer,
+                tf.keras.layers.Dropout(0.6),
                 tf.keras.layers.Bidirectional(
                     tf.keras.layers.LSTM(128, dropout=0.4, return_sequences=True)
                 ),
+                tf.keras.layers.Dropout(0.6),
                 tf.keras.layers.Conv1D(64, 5, activation="relu"),
                 tf.keras.layers.Bidirectional(
                     tf.keras.layers.LSTM(128, dropout=0.4, return_sequences=True)
@@ -36,10 +39,18 @@ class TFlstm(TFModel):
             ]
         )
         lr = self.lr_scheduler(self.params["lr"])
+
+        metrics = [
+            tf.keras.metrics.BinaryAccuracy(name="accuracy"),
+            tfa.metrics.F1Score(num_classes=1, average="macro", threshold=0.5),
+            tf.keras.metrics.Precision(name="precision"),
+            tf.keras.metrics.Recall(name="recall"),
+        ]
+
         self.model.compile(
             optimizer=tf.keras.optimizers.Adam(learning_rate=lr),
             loss=tf.keras.losses.BinaryCrossentropy(),
-            metrics=["accuracy"],
+            metrics=metrics,
         )
 
     @classmethod
