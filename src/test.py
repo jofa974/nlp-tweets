@@ -4,7 +4,6 @@ from pathlib import Path
 
 import numpy as np
 import pandas as pd
-from scipy.sparse.extract import find
 from sklearn.metrics import f1_score, precision_recall_curve
 
 from src.dataset import Dataset
