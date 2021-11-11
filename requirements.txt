@@ -1,5 +1,5 @@
 absl-py==0.15.0
-aiohttp>=3.7.4
+aiohttp==3.7.4.post0
 aiohttp-retry==2.4.6
 appdirs==1.4.4
 argon2-cffi==21.1.0
@@ -34,6 +34,7 @@ distro==1.6.0
 dpath==2.0.5
 dulwich==0.20.26
 dvc==2.8.2
+dvclive==0.4.2
 en-core-web-sm @ https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-3.0.0/en_core_web_sm-3.0.0-py3-none-any.whl
 entrypoints==0.3
 flake8==4.0.1
@@ -87,6 +88,7 @@ mccabe==0.6.1
 mistune==0.8.4
 multidict==5.2.0
 murmurhash==1.0.6
+mypy==0.910
 mypy-extensions==0.4.3
 nanotime==0.5.2
 nbclient==0.5.4
@@ -167,6 +169,7 @@ tensorboard==2.7.0
 tensorboard-data-server==0.6.1
 tensorboard-plugin-wit==1.8.0
 tensorflow==2.6.0
+tensorflow-addons==0.14.0
 tensorflow-estimator==2.6.0
 tensorflow-gpu==2.6.0
 termcolor==1.1.0
@@ -180,7 +183,9 @@ tomli==1.2.2
 tornado==6.1
 tqdm==4.62.3
 traitlets==5.1.1
+typeguard==2.13.0
 typer==0.3.2
+types-PyYAML==6.0.0
 typing-extensions==3.7.4.3
 uritemplate==4.1.1
 urllib3==1.26.7
